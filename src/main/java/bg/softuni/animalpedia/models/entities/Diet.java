@@ -14,5 +14,5 @@ import lombok.Setter;
 public class Diet extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private DietType dietType;
+    private DietType type;
 }

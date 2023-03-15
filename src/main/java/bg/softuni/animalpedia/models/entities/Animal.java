@@ -35,7 +35,7 @@ public class Animal extends BaseEntity {
     private String scientificName;
 
     @ManyToOne(optional = false)
-    private ConservationStatus conservationStatus;
+    private ConservationStatus conservation;
 
     @ManyToMany
     private Set<Location> locations;
@@ -51,7 +51,7 @@ public class Animal extends BaseEntity {
 
     private Integer lifespan;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String description;
 
     @Column(nullable = false)

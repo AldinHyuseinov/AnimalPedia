@@ -2,7 +2,7 @@ package bg.softuni.animalpedia.web.restcontrollers;
 
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
 import bg.softuni.animalpedia.services.UserService;
-import bg.softuni.animalpedia.utils.exceptions.UserRegistrationException;
+import bg.softuni.animalpedia.utils.exceptions.FormErrorException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -42,7 +42,7 @@ public class UserRestController {
             Map<String, String> fieldAndMessage = new HashMap<>();
             bindingResult.getFieldErrors().forEach(fieldError -> fieldAndMessage.put(fieldError.getField(),
                     fieldError.getDefaultMessage()));
-            throw new UserRegistrationException(fieldAndMessage);
+            throw new FormErrorException(fieldAndMessage);
         }
 
         userService.registerUser(registerUserDTO, auth -> {
@@ -58,10 +58,5 @@ public class UserRestController {
         LOGGER.info("Registered and logged in user with username: {}", registerUserDTO.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @ExceptionHandler(UserRegistrationException.class)
-    public ResponseEntity<Map<String, String>> onRegistrationError(UserRegistrationException ure) {
-        return ResponseEntity.badRequest().body(ure.getFieldAndMessage());
     }
 }

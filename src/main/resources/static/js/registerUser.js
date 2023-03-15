@@ -31,20 +31,7 @@ form.addEventListener('submit', function (event) {
         .then(response => {
 
             if (response.status === 400) {
-                response.json().then(errors => {
-                    Object.keys(errors).forEach(key => {
-                        const errorElement = document.querySelector(`#${key}-error`);
-                        errorElement.textContent = errors[key];
-                        errorElement.style.display = 'block';
-                    });
-
-                    for (let dataKey in data) {
-
-                        if (!errors.hasOwnProperty(dataKey)) {
-                            document.querySelector(`#${dataKey}-error`).style.display = 'none';
-                        }
-                    }
-                })
+                manageResponse(response, data)
             } else {
                 window.location.href = 'http://localhost:8000/';
             }

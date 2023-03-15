@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar}">Navbar</div>
+
+<div class="container">
+    <h1 class="text-center p-3 mb-3">Add Animal</h1>
+    <form id="animal-form">
+        <div class="row">
+            <div class="col-md-6">
+                <h3>Scientific Classification</h3>
+
+                <!-- Phylum -->
+                <div class="form-group">
+                    <label for="phylumType">Phylum</label>
+                    <select class="form-control" id="phylumType" name="phylumType">
+                        <!-- Options here -->
+                        <option value="">Select phylum</option>
+                        <option value="SPONGE">Sponge</option>
+                        <option value="CNIDARIAN">Cnidarian</option>
+                        <option value="FLATWORM">Flatworm</option>
+                        <option value="ANNELID">Annelid</option>
+                        <option value="MOLLUSK">Mollusk</option>
+                        <option value="ARTHROPOD">Arthropod</option>
+                        <option value="CHORDATE">Chordate</option>
+                    </select>
+                    <p id="phylumType-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Class -->
+                <div class="form-group">
+                    <label for="animalClass">Class</label>
+                    <select class="form-control" id="animalClass" name="animalClass">
+                        <!-- Options here -->
+                        <option value="">Select animal class</option>
+                        <option value="JAWLESS_FISH">Jaw-less Fish</option>
+                        <option value="CARTILAGINOUS_FISH">Cartilaginous Fish</option>
+                        <option value="BONY_FISH">Bony Fish</option>
+                        <option value="AMPHIBIAN">Amphibian</option>
+                        <option value="REPTILE">Reptile</option>
+                        <option value="BIRD">Bird</option>
+                        <option value="MAMMAL">Mammal</option>
+                    </select>
+                    <p id="animalClass-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Order -->
+                <div class="form-group">
+                    <label for="animalOrder">Order</label>
+                    <input type="text" class="form-control" id="animalOrder" name="animalOrder"/>
+                    <p id="animalOrder-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Family -->
+                <div class="form-group">
+                    <label for="animalFamily">Family</label>
+                    <input type="text" class="form-control" id="animalFamily" name="animalFamily"/>
+                    <p id="animalFamily-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Genus -->
+                <div class="form-group">
+                    <label for="genus">Genus</label>
+                    <input type="text" class="form-control" id="genus" name="genus"/>
+                    <p id="genus-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Specie Name -->
+                <div class="form-group">
+                    <label for="specieName">Specie Name</label>
+                    <input type="text" class="form-control" id="specieName" name="specieName"/>
+                    <p id="specieName-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Scientific Name -->
+                <div class="form-group">
+                    <label for="scientificName">Scientific Name</label>
+                    <input type="text" class="form-control" id="scientificName" name="scientificName"/>
+                    <p id="scientificName-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <h3>Facts and Characteristics</h3>
+
+                <!-- Conservation Status -->
+                <div class="form-group">
+                    <label for="conservationStatus">Conservation Status</label>
+                    <select class="form-control" id="conservationStatus" name="conservationStatus">
+                        <!-- Options here -->
+                        <option value="">Select conservation status</option>
+                        <option value="EXTINCT">Extinct</option>
+                        <option value="EXTINCT_IN_THE_WILD">Extinct in the Wild</option>
+                        <option value="CRITICALLY_ENDANGERED">Critically Endangered</option>
+                        <option value="ENDANGERED">Endangered</option>
+                        <option value="VULNERABLE">Vulnerable</option>
+                        <option value="NEAR_THREATENED">Near Threatened</option>
+                        <option value="CONSERVATION_DEPENDENT">Conservation Dependent</option>
+                        <option value="LEAST_CONCERN">Least Concern</option>
+                        <option value="DATA_DEFICIENT">Data Deficient</option>
+                        <option value="NOT_EVALUATED">Not Evaluated</option>
+                    </select>
+                    <p id="conservationStatus-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+                <!-- Habitat -->
+                <div class="form-group">
+                    <label for="habitat">Habitat</label>
+                    <input type="text" class="form-control" id="habitat" name="habitat"/>
+                    <p id="habitat-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Diet Type -->
+                <div class="form-group">
+                    <label for="dietType">Diet Type</label>
+                    <select class="form-control" id="dietType" name="dietType">
+                        <!-- Options here -->
+                        <option value="">Select animal diet</option>
+                        <option value="HERBIVOROUS">Herbivorous</option>
+                        <option value="CARNIVOROUS">Carnivorous</option>
+                        <option value="OMNIVOROUS">Omnivorous</option>
+                    </select>
+                    <p id="dietType-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Skin Type -->
+                <div class="form-group">
+                    <label for="skinType">Skin Type</label>
+                    <select class="form-control" id="skinType" name="skinType">
+                        <!-- Options here -->
+                        <option value="">Select skin type</option>
+                        <option value="SCALES">Scales</option>
+                        <option value="FUR">Fur</option>
+                        <option value="FEATHERS">Feathers</option>
+                        <option value="SHELL">Shell</option>
+                    </select>
+                    <p id="skinType-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Lifespan -->
+                <div class="form-group">
+                    <label for="lifespan">Lifespan</label>
+                    <input type="number" class="form-control" id="lifespan" name="lifespan"/>
+                    <p id="lifespan-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description"></textarea>
+                    <p id="description-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+
+                <!-- Locations -->
+                <div class="form-group mb-3">
+                    <label>Location</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="ASIA" id="asia">
+                        <label class="form-check-label" for="asia">
+                            Asia
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="AFRICA" id="africa">
+                        <label class="form-check-label" for="africa">
+                            Africa
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="NORTH_AMERICA"
+                               id="north-america">
+                        <label class="form-check-label" for="north-america">
+                            North America
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="SOUTH_AMERICA"
+                               id="south-america">
+                        <label class="form-check-label" for="south-america">
+                            South America
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="ANTARCTICA"
+                               id="antarctica">
+                        <label class="form-check-label" for="antarctica">
+                            Antarctica
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="EUROPE" id="europe">
+                        <label class="form-check-label" for="europe">
+                            Europe
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="continent[]" value="AUSTRALIA"
+                               id="australia">
+                        <label class="form-check-label" for="australia">
+                            Australia
+                        </label>
+                    </div>
+                    <p id="locations-error" class="errors alert alert-danger" style="display: none"></p>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </div>
+    </form>
+</div>
+<script src="/js/addAnimal.js"></script>
+<script src="/js/manageResponse.js"></script>
+
+<div th:replace="~{fragments/footer}">Footer</div>
+
+</body>
+</html>

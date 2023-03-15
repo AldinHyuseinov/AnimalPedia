@@ -17,10 +17,13 @@ public class ConservationStatusService {
 
     @PostConstruct
     private void initStatuses() {
-        Arrays.stream(Status.values()).map(status -> {
-            ConservationStatus conservationStatus = new ConservationStatus();
-            conservationStatus.setStatus(status);
-            return conservationStatus;
-        }).forEach(conservationStatusRepository::save);
+
+        if (conservationStatusRepository.count() == 0) {
+            Arrays.stream(Status.values()).map(status -> {
+                ConservationStatus conservationStatus = new ConservationStatus();
+                conservationStatus.setStatus(status);
+                return conservationStatus;
+            }).forEach(conservationStatusRepository::save);
+        }
     }
 }

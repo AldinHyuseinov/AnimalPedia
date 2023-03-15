@@ -22,6 +22,8 @@ public class PhylumService {
                 Phylum phylum = new Phylum();
                 phylum.setType(phylumConst);
                 phylum.setDescription(descriptionFor(phylumConst));
+
+                phylumRepository.save(phylum);
             }
         }
     }

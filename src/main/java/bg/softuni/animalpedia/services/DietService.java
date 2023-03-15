@@ -21,7 +21,7 @@ public class DietService {
         if (dietRepository.count() == 0) {
             Arrays.stream(DietType.values()).map(dietType -> {
                 Diet diet = new Diet();
-                diet.setDietType(dietType);
+                diet.setType(dietType);
                 return diet;
             }).forEach(dietRepository::save);
         }
