@@ -2,6 +2,7 @@ package bg.softuni.animalpedia.models.dto;
 
 import bg.softuni.animalpedia.models.enums.*;
 import bg.softuni.animalpedia.models.enums.Class;
+import bg.softuni.animalpedia.utils.validations.annotations.UniqueSpecieName;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class AddAnimalDTO {
     // Scientific Classification
     @Size(min = 3, max = 40, message = "Specie name should be between 3 and 4o symbols!")
+    @UniqueSpecieName
     private String specieName;
 
     @NotNull(message = "Select the phylum!")

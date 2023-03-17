@@ -1,0 +1,62 @@
+/* Top Container */
+.top-container {
+    display: grid;
+    grid-gap: 20px;
+    grid-template-areas:
+    'showcase showcase top-box-a'
+    'showcase showcase top-box-b';
+}
+
+@media (max-width: 724px) {
+    .top-container {
+        grid-template-areas:
+      'showcase showcase'
+      'top-box-a top-box-b';
+    }
+}
+
+@media (max-width: 500px) {
+    .top-container {
+        grid-template-areas:
+      'showcase'
+      'top-box-a'
+      'top-box-b';
+    }
+}
+
+/* Showcase */
+.showcase {
+    grid-area: showcase;
+    min-height: 400px;
+    background-size: cover;
+    background: url('../images/tiger.jpg') center;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
+}
+
+.showcase h5 {
+    font-size: 4rem;
+    margin-bottom: 0;
+}
+
+.showcase h6 {
+    font-size: 1.3rem;
+    margin-top: 0;
+}
+
+img {
+    max-width: 100%;
+}
+
+.wrapper {
+    display: grid;
+    grid-gap: 20px;
+}
+
+.animal-card {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 1rem;
+}

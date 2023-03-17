@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar}">Navbar</div>
+
+<div class="container my-5">
+
+    <div class="row">
+        <main class="col-lg-9 col-md-12">
+            <h2 class="text-start text-black">All Animal</h2>
+            <p class="text-start text-black">You will find all the so far added animals below.</p>
+
+            <div th:each="a : ${animals}" class="card animal-card">
+                <div class="card-body">
+                    <h3 class="card-title text-start text-black col-12 mx-5" th:text="${a.specieName}"></h3>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-12 text-center">
+                                <img src="/images/placeholder.png" alt="Lion" class="card-img w-75 h-auto">
+                            </div>
+                            <div class="col">
+                                <div class="card-text">
+                                    <p th:text="${#strings.length(a.description) > 300} ? ${#strings.substring(a.description, 0, 300) + '...'} : ${a.description}"></p>
+                                    <a class="small" th:href="${a.detailsLink}">Read More</a>
+                                    <p class="text-muted small"
+                                       th:text="'By ' + ${a.addedByUsername} + ' ' + ${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer}">Footer</div>
+
+</body>
+</html>

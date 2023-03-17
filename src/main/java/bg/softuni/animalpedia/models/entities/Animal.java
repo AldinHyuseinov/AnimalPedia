@@ -28,7 +28,7 @@ public class Animal extends BaseEntity {
     @Column(nullable = false)
     private String genus;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String specieName;
 
     @Column(nullable = false)

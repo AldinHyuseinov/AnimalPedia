@@ -8,8 +8,33 @@
 
 <div th:replace="~{fragments/navbar}">Navbar</div>
 
-<div class="container-fluid">
-  <h5 class="text-center text-black mt-5">Welcome to AnimalPedia!</h5>
+<div class="wrapper m-5">
+    <section class="top-container">
+        <div class="showcase">
+            <h5 class="text-center text-white mt-5">Welcome to AnimalPedia!</h5>
+            <h5 class="text-start text-white">Are you ready to explore the amazing world of animals? Here you will find
+                fascinating facts, stunning photos
+                about all kinds of creatures.</h5>
+            <div class="row justify-content-center w-100 mt-3">
+                <div class="col-md-4 text-center">
+                    <a href="/animals/all">
+                        <button type="button" class="btn btn-light btn-lg text-black">See All Animals</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Placeholder -->
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
+                    card's content.</p>
+                <a href="#" class="card-link">Card link</a>
+                <a href="#" class="card-link">Another link</a>
+            </div>
+        </div>
+    </section>
 </div>
 
 <div th:replace="~{fragments/footer}">Footer</div>

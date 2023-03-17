@@ -2,7 +2,7 @@ package bg.softuni.animalpedia.web.restcontrollers;
 
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
 import bg.softuni.animalpedia.services.UserService;
-import bg.softuni.animalpedia.utils.exceptions.FormErrorException;
+import bg.softuni.animalpedia.utils.exceptions.FormException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -35,14 +35,14 @@ public class UserRestController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> registerUser(@RequestBody @Valid RegisterUserDTO registerUserDTO, BindingResult bindingResult,
+    public ResponseEntity<?> registerUser(@RequestBody @Valid RegisterUserDTO registerUserDTO, BindingResult bindingResult,
                                              HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> fieldAndMessage = new HashMap<>();
             bindingResult.getFieldErrors().forEach(fieldError -> fieldAndMessage.put(fieldError.getField(),
                     fieldError.getDefaultMessage()));
-            throw new FormErrorException(fieldAndMessage);
+            throw new FormException(fieldAndMessage);
         }
 
         userService.registerUser(registerUserDTO, auth -> {

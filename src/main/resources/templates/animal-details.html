@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar}">Navbar</div>
+
+<div class="container my-5">
+    <div class="row">
+        <main class="col-lg-9 col-md-12">
+            <h1 class="text-center text-black" th:text="${animal.specieName}"></h1>
+            <img src="/images/placeholder.png" alt="Picture" class="card-img rounded w-100 h-25 mb-3">
+            <div class="card animal-card">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card-body">
+                            <h2 class="card-title text-start text-black mb-3">Scientific Classification</h2>
+                            <dl class="row">
+                                <dt class="col-sm-3 text-md-start text-black">Phylum</dt>
+                                <dd class="col-sm-9" th:if="${#strings.contains(animal.phylumType, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(#strings.replace(animal.phylumType, '_', ' ')))}"></dd>
+                                <dd class="col-sm-9" th:unless="${#strings.contains(animal.phylumType, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(animal.phylumType))}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Class</dt>
+                                <dd class="col-sm-9" th:if="${#strings.contains(animal.animalClass, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(#strings.replace(animal.animalClass, '_', ' ')))}"></dd>
+                                <dd class="col-sm-9" th:unless="${#strings.contains(animal.animalClass, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(animal.animalClass))}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Order</dt>
+                                <dd class="col-sm-9" th:text="${animal.animalOrder}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Family</dt>
+                                <dd class="col-sm-9" th:text="${animal.animalFamily}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Genus</dt>
+                                <dd class="col-sm-9" th:text="${animal.genus}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Scientific name</dt>
+                                <dd class="col-sm-9" th:text="${animal.scientificName}"></dd>
+                            </dl>
+                            <p></p>
+                            <h2 class="card-title text-start text-black mb-3">Conservation Status</h2>
+                            <ul class="list-unstyled">
+                                <li th:if="${#strings.contains(animal.conservationStatus, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(#strings.replace(animal.conservationStatus, '_', ' ')))}"></li>
+                                <li th:unless="${#strings.contains(animal.conservationStatus, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(animal.conservationStatus))}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card-body">
+                            <h2>Locations</h2>
+                            <ul th:each="l : ${animal.continents}" class="list-unstyled">
+                                <li th:if="${#strings.contains(l, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(#strings.replace(l, '_', ' ')))}"></li>
+                                <li th:unless="${#strings.contains(l, '_')}"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(l))}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card animal-card">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="card-body">
+                            <h2 class="card-title text-start text-black mb-3">Facts</h2>
+                            <dl class="row">
+                                <dt class="col-sm-3 text-md-start text-black">Habitat</dt>
+                                <dd class="col-sm-9" th:text="${animal.habitat}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Skin Type</dt>
+                                <dd class="col-sm-9"
+                                    th:text="${animal.skinType == null} ? 'Not Specified' : ${#strings.capitalizeWords(#strings.toLowerCase(animal.skinType))}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Lifespan</dt>
+                                <dd class="col-sm-9" th:text="${animal.lifespan}"></dd>
+                                <dt class="col-sm-3 text-md-start text-black">Diet</dt>
+                                <dd class="col-sm-9"
+                                    th:text="${#strings.capitalizeWords(#strings.toLowerCase(animal.dietType))}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5 th:text="${animal.description}"></h5>
+        </main>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer}">Footer</div>
+
+</body>
+</html>

@@ -4,6 +4,7 @@ import bg.softuni.animalpedia.repositories.UserRepository;
 import bg.softuni.animalpedia.services.UserDetailsServiceImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,6 +17,7 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class BeanConfiguration {
@@ -23,7 +25,8 @@ public class BeanConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/auth/login", "/auth/register", "/api/users/register", "/auth/login-error").permitAll()
+                .requestMatchers("/", "/auth/login", "/auth/register", "/api/users/register",
+                        "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}", "/animals/{specie-name}").permitAll()
                 .anyRequest().authenticated().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
@@ -55,5 +58,10 @@ public class BeanConfiguration {
     @Bean
     public ModelMapper mapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public RestTemplate create(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.build();
     }
 }

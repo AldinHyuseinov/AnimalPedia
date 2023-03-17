@@ -1,6 +1,8 @@
 package bg.softuni.animalpedia.services;
 
 import bg.softuni.animalpedia.models.dto.AddAnimalDTO;
+import bg.softuni.animalpedia.models.dto.AnimalDTO;
+import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.repositories.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -45,5 +50,19 @@ public class AnimalService {
             animal.setSkin(skinRepository.getByType(addAnimalDTO.getSkinType()));
         }
         animalRepository.save(animal);
+    }
+
+    public List<AnimalDTO> allAnimals() {
+        return animalRepository.findAll().stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
+    }
+
+    public AnimalDetailsDTO animalByName(String specieName) {
+        return animalRepository.findBySpecieName(specieName)
+                .map(a -> {
+                    AnimalDetailsDTO animalDetailsDTO = mapper.map(a, AnimalDetailsDTO.class);
+                    animalDetailsDTO.getContinents().addAll(animalRepository.getContinentsBySpecie(animalDetailsDTO.getSpecieName()));
+                    return animalDetailsDTO;
+                })
+                .orElseThrow(() -> new NoSuchElementException("No such animal found!"));
     }
 }

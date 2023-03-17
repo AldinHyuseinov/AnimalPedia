@@ -1,8 +1,8 @@
 package bg.softuni.animalpedia.models.dto;
 
-import bg.softuni.animalpedia.utils.validation.FieldMatch;
-import bg.softuni.animalpedia.utils.validation.UniqueEmail;
-import bg.softuni.animalpedia.utils.validation.UniqueUsername;
+import bg.softuni.animalpedia.utils.validations.annotations.FieldMatch;
+import bg.softuni.animalpedia.utils.validations.annotations.UniqueEmail;
+import bg.softuni.animalpedia.utils.validations.annotations.UniqueUsername;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;

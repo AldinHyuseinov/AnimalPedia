@@ -1,5 +1,6 @@
-package bg.softuni.animalpedia.utils.validation;
+package bg.softuni.animalpedia.utils.validations.annotations;
 
+import bg.softuni.animalpedia.utils.validations.validators.UniqueEmailValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
