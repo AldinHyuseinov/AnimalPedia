@@ -12,7 +12,10 @@
     <div class="row">
         <main class="col-lg-9 col-md-12">
             <h1 class="text-center text-black" th:text="${animal.specieName}"></h1>
-            <img src="/images/placeholder.png" alt="Picture" class="card-img rounded w-100 h-25 mb-3">
+            <img th:if="${animal.url == null}" src="/images/placeholder.png" alt="Picture"
+                 class="card-img rounded w-100 h-25 mb-3">
+            <img th:unless="${animal.url == null}" th:src="${animal.url}" alt="Picture"
+                 class="card-img rounded w-100 h-25 mb-3">
             <div class="card animal-card">
                 <div class="row">
                     <div class="col-lg-6">
@@ -58,6 +61,47 @@
                                     th:text="${#strings.capitalizeWords(#strings.toLowerCase(l))}"></li>
                             </ul>
                         </div>
+
+                        <div class="card-body">
+                            <h2 class="text-start mb-4">Add Picture</h2>
+                            <form onsubmit="return isPicture()"
+                                  th:action="@{/pictures/upload/{specie-name}(specie-name=${animal.specieName})}"
+                                  th:method="POST"
+                                  th:object="${pictureModel}"
+                                  enctype="multipart/form-data"
+                                  class="w-100">
+
+                                <div class="form-group w-100">
+                                    <label>
+                                        <input th:field="*{title}" type="text" name="title" class="form-control"
+                                               placeholder="Enter picture title">
+                                    </label>
+                                </div>
+                                <div class="image-upload d-flex">
+                                    <label for="picture" class="w-100 text-center">
+                                        <img id="previewImage" src="/images/add-img.png" alt=""
+                                             class="d-flex justify-content-start w-50 mb-2 mt-2"/>
+                                    </label>
+                                    <input onchange="picToString()" style="display: none" id="picture" type="file"
+                                           name="picture"/>
+                                    <input th:field="*{url}" type="hidden" id="picString">
+                                </div>
+                                <div class="form-group w-100 mx-5">
+                                    <button class="btn btn-primary rounded mb-2 mt-2">Upload Picture</button>
+                                </div>
+                                <strong id="pictureRequiredError"
+                                        class="form-text bg-danger rounded" style="display: none">A picture must be
+                                    selected.</strong>
+                                <strong id="pictureFormatError"
+                                        class="form-text bg-danger rounded" style="display: none">Must be valid picture
+                                    format.</strong>
+                                <strong th:if="${userNotLoggedIn}" th:text="${userNotLoggedIn}"
+                                        class="form-text bg-danger rounded"></strong>
+                                <strong th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+                                        class="form-text bg-danger rounded"></strong>
+                            </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -83,7 +127,40 @@
                     </div>
                 </div>
             </div>
-            <h5 th:text="${animal.description}"></h5>
+            <h5 class="mb-3" th:text="${animal.description}"></h5>
+            <h1 class="text-center text-black">Gallery</h1>
+
+            <div class="row">
+                <div id="carouselExampleCaptions" class="carousel slide" style="height: 500px;">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="/images/animals.jpg" class="d-block w-100" alt="Slide 1" style="height: 500px;">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>Welcome to the Gallery!</h5>
+                                <p th:text="'Slide around to see pictures of a ' + ${animal.specieName} + ' if there are any.'"></p>
+                            </div>
+                        </div>
+                        <div th:each="p : ${animalPictures}" class="carousel-item">
+                            <img th:src="${p.url}" class="d-block w-100" alt="Slide 2" style="height: 500px;">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5 th:text="${p.title}"></h5>
+                                <p th:text="${p.authorUsername}"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
         </main>
     </div>
 

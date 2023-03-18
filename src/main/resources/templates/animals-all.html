@@ -12,16 +12,21 @@
 
     <div class="row">
         <main class="col-lg-9 col-md-12">
-            <h2 class="text-start text-black">All Animal</h2>
+            <h2 class="text-start text-black">All Animals</h2>
             <p class="text-start text-black">You will find all the so far added animals below.</p>
 
             <div th:each="a : ${animals}" class="card animal-card">
                 <div class="card-body">
-                    <h3 class="card-title text-start text-black col-12 mx-5" th:text="${a.specieName}"></h3>
+                    <a class="link-dark" th:href="${a.detailsLink}">
+                        <h3 class="card-title text-start text-black col-12 mx-5" th:text="${a.specieName}"></h3>
+                    </a>
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-4 col-md-12 text-center">
-                                <img src="/images/placeholder.png" alt="Lion" class="card-img w-75 h-auto">
+                                <img th:if="${a.url == null}" src="/images/placeholder.png" alt="Animal Picture"
+                                     class="card-img w-75 h-auto">
+                                <img th:unless="${a.url == null}" th:src="${a.url}" alt="Animal Picture"
+                                     class="card-img w-75 h-100">
                             </div>
                             <div class="col">
                                 <div class="card-text">

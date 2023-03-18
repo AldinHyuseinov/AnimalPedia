@@ -11,6 +11,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class AnimalDetailsDTO {
+    private String url;
+
     private String specieName;
 
     private PhylumType phylumType;
@@ -27,7 +29,6 @@ public class AnimalDetailsDTO {
 
     private Set<Continent> continents;
 
-    // Facts and characteristics
     private Status conservationStatus;
 
     private String habitat;

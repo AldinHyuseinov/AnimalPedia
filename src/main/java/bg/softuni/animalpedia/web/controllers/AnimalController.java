@@ -1,7 +1,9 @@
 package bg.softuni.animalpedia.web.controllers;
 
+import bg.softuni.animalpedia.models.dto.AddPictureDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
+import bg.softuni.animalpedia.services.PictureService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,10 +24,13 @@ import java.util.List;
 public class AnimalController {
     private final RestTemplate restTemplate;
 
+    private final PictureService pictureService;
+
     private static final String API_URL = "http://localhost:8000/api/animals/";
 
-    public AnimalController(RestTemplate restTemplate) {
+    public AnimalController(RestTemplate restTemplate, PictureService pictureService) {
         this.restTemplate = restTemplate;
+        this.pictureService = pictureService;
     }
 
     @GetMapping("/add")
@@ -50,6 +56,11 @@ public class AnimalController {
         return "animals-all";
     }
 
+    @ModelAttribute("pictureModel")
+    public AddPictureDTO initPicture() {
+        return new AddPictureDTO();
+    }
+
     @GetMapping("/{specie-name}")
     public String animal(@PathVariable("specie-name") String name, Model model) {
         ResponseEntity<EntityModel<AnimalDetailsDTO>> response = restTemplate.exchange(API_URL + name,
@@ -57,13 +68,15 @@ public class AnimalController {
                 });
 
         EntityModel<AnimalDetailsDTO> animal = response.getBody();
+
         model.addAttribute("animal", animal.getContent());
+        model.addAttribute("animalPictures", pictureService.allAnimalPicturesByName(name));
 
         return "animal-details";
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler(HttpClientErrorException.class)
     public ModelAndView onAnimalNotFoundInApi() {
         return new ModelAndView("animal-not-found");
     }

@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class AnimalDTO {
-    private Long id;
-
     private String specieName;
 
     private String url;

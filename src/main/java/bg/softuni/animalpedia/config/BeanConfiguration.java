@@ -26,7 +26,8 @@ public class BeanConfiguration {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/", "/auth/login", "/auth/register", "/api/users/register",
-                        "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}", "/animals/{specie-name}").permitAll()
+                        "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
+                        "/animals/{specie-name}", "/pictures/upload/{specie-name}").permitAll()
                 .anyRequest().authenticated().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)

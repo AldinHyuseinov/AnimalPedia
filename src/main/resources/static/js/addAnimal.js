@@ -38,7 +38,7 @@ form.addEventListener('submit', function (event) {
         conservationStatus: conservationStatus === '' ? null : conservationStatus,
         habitat: habitat,
         dietType: dietType === '' ? null : dietType,
-        skinType: dietType === '' ? null : skinType,
+        skinType: skinType === '' ? null : skinType,
         lifespan: lifespan === '' ? null : lifespan,
         description: description
     }
