@@ -4,6 +4,7 @@ import bg.softuni.animalpedia.repositories.UserRepository;
 import bg.softuni.animalpedia.utils.validations.annotations.UniqueUsername;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,15 +20,15 @@ public class UniqueUsernameValidator implements ConstraintValidator<UniqueUserna
     public boolean isValid(String value, ConstraintValidatorContext context) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
+        boolean isValid;
 
-        if (authentication == null) {
-            return userRepository.findByUsername(value).isEmpty();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            isValid = userRepository.findByUsername(value).isEmpty();
+        } else if (authentication.getName().equals(value)) {
+            isValid = true;
+        } else {
+            isValid = userRepository.findByUsername(value).isEmpty();
         }
-
-        if (authentication.getName().equals(value)) {
-            return true;
-        }
-
-        return userRepository.findByUsername(value).isEmpty();
+        return isValid;
     }
 }

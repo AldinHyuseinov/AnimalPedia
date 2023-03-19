@@ -6,6 +6,7 @@ import bg.softuni.animalpedia.utils.validations.annotations.UniqueEmail;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,17 +23,19 @@ public class UniqueEmailValidator implements ConstraintValidator<UniqueEmail, St
     public boolean isValid(String value, ConstraintValidatorContext context) {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
+        boolean isValid;
 
-        if (authentication == null) {
-            return userRepository.findByEmail(value).isEmpty();
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            isValid = userRepository.findByEmail(value).isEmpty();
+        } else {
+            AppUser appUser = (AppUser) authentication.getPrincipal();
+
+            if (appUser.getEmail().equals(value)) {
+                isValid = true;
+            } else {
+                isValid = userRepository.findByEmail(value).isEmpty();
+            }
         }
-
-        AppUser appUser = (AppUser) authentication.getPrincipal();
-
-        if (appUser.getEmail().equals(value)) {
-            return true;
-        }
-
-        return userRepository.findByEmail(value).isEmpty();
+        return isValid;
     }
 }
