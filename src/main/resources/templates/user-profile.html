@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+
+<div th:replace="~{fragments/navbar}">Navbar</div>
+
+<main class="container my-5">
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-7">
+            <div class="profile-card p-3 py-4">
+
+                <div class="text-center position-relative">
+                    <img th:if="${#authentication.principal.imageUrl == null}" src="/images/no-user-image-icon-23.jpg"
+                         width="100"
+                         class="rounded-circle" alt="Profile Pic">
+                    <img th:unless="${#authentication.principal.imageUrl == null}"
+                         th:src="${#authentication.principal.imageUrl}" width="100"
+                         class="rounded-circle" alt="Profile Pic">
+                    <a href="/users/edit" class="position-absolute top-75 end-2 translate-middle-y m-1">
+                        <img src="/images/pen.png" width="20" alt="Pen">
+                    </a>
+                </div>
+
+                <div class="text-center mt-3">
+                    <h5 class="mt-4 mb-0">Full name</h5>
+                    <span th:text="${#authentication.principal.firstName} + ' ' + ${#authentication.principal.lastName}"></span>
+                    <h5 class="mt-2 mb-0">Username</h5>
+                    <span th:text="${#authentication.principal.username}"></span>
+                    <h5 class="mt-2 mb-0">Email</h5>
+                    <span th:text="${#authentication.principal.email}"></span>
+                    <div class="px-4 mt-5">
+                    </div>
+                    <button onclick="window.location='javascript:history.back()'" class="btn btn-primary px-4">
+                        Back
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer}">Footer</div>
+
+</body>
+</html>

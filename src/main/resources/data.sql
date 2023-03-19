@@ -20,7 +20,7 @@ VALUES (7, 7, 'Artiodactyla', 'Bovidae', 'Capra', 'Alpine Goat', 'Capra aegagrus
         'The lion is a species in the family Felidae and a member of the genus Panthera. It has a muscular deep-chested body short rounded head round ears and a hairy tuft at the end of its tail.',
         NOW(), NULL, false, 1),
        (7, 7, 'Rodentia', 'Sciuridae', 'Sciurus', 'Squirrel',
-        'Sciurus carolinensis', 1,
+        'Sciurus carolinensis', 6,
         'Deciduous and mixed forests parks and gardens within cities and suburbs.', 3,
         2, 12,
         'The squirrel is a species in the family Sciuridae and a member of the genus Sciurus. It is native to eastern North America where it is the most prodigious and ecologically essential natural forest regenerator.',

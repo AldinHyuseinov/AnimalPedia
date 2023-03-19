@@ -60,3 +60,25 @@ img {
     border-bottom: 1px solid #ccc;
     margin-bottom: 1rem;
 }
+
+.profile-card {
+    border: none;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    min-height: 65vh;
+}
+
+.profile-card:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    background-color: #0833e3;
+    transform: scaleY(0);
+    transition: all 0.5s;
+    transform-origin: bottom
+}

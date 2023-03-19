@@ -23,17 +23,22 @@
                 </div>
             </div>
         </div>
-        <!-- Placeholder -->
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the
-                    card's content.</p>
-                <a href="#" class="card-link">Card link</a>
-                <a href="#" class="card-link">Another link</a>
+
+        <th:block th:unless="${noAnimalOfTheDay}">
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title">Animal Of The Day</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="${animalOfTheDay.specieName}"></h6>
+                    <img th:src="${animalOfTheDay.url == null} ? '/images/placeholder.png' : ${animalOfTheDay.url}">
+                    <p class="card-text"
+                       th:text="${#strings.length(animalOfTheDay.description) > 45} ? ${#strings.substring(animalOfTheDay.description, 0, 45) + '...'} :
+                   ${animalOfTheDay.description}"></p>
+                    <a th:href="@{/animals/{specie-name}(specie-name=${animalOfTheDay.specieName})}" class="card-link">Read
+                        More</a>
+                </div>
             </div>
-        </div>
+        </th:block>
+
     </section>
 
     <h2 class="mt-2">The 6 Main Types of Animals</h2>

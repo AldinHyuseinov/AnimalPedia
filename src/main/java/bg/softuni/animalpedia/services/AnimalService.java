@@ -3,6 +3,7 @@ package bg.softuni.animalpedia.services;
 import bg.softuni.animalpedia.models.dto.AddAnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
+import bg.softuni.animalpedia.models.dto.AnimalOfTheDayDTO;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.repositories.*;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -64,5 +66,14 @@ public class AnimalService {
                     return animalDetailsDTO;
                 })
                 .orElseThrow(() -> new NoSuchElementException("No such animal found!"));
+    }
+
+    public AnimalOfTheDayDTO randomAnimal() {
+        List<Animal> animals = animalRepository.findAll();
+
+        Random random = new Random();
+        int index = random.nextInt(animals.size());
+
+        return mapper.map(animals.get(index), AnimalOfTheDayDTO.class);
     }
 }

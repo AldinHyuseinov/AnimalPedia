@@ -1,18 +1,24 @@
 package bg.softuni.animalpedia.services;
 
+import bg.softuni.animalpedia.models.dto.EditUserDTO;
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
 import bg.softuni.animalpedia.models.entities.User;
 import bg.softuni.animalpedia.models.enums.Role;
 import bg.softuni.animalpedia.repositories.UserRepository;
 import bg.softuni.animalpedia.repositories.UserRoleRepository;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,9 +47,31 @@ public class UserService {
 
         UserDetails userDetails = userDetailsService.loadUserByUsername(registerUserDTO.getUsername());
 
+        login(loginProcessor, userDetails);
+    }
+
+    public void editUser(EditUserDTO editUserDTO, String username, Consumer<Authentication> loginProcessor) {
+        User user = userRepository.findByUsername(username).orElse(null);
+
+        if (!editUserDTO.getImageUrl().equals("")) {
+            user.setImageUrl(editUserDTO.getImageUrl());
+        }
+        user.setUsername(editUserDTO.getUsername());
+        user.setFirstName(editUserDTO.getFirstName());
+        user.setLastName(editUserDTO.getLastName());
+        user.setEmail(editUserDTO.getEmail());
+        user.setModified(LocalDateTime.now());
+
+        userRepository.save(user);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(editUserDTO.getUsername());
+
+        login(loginProcessor, userDetails);
+    }
+
+    private void login(Consumer<Authentication> loginProcessor, UserDetails userDetails) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
                 userDetails.getAuthorities());
-
         loginProcessor.accept(authentication);
     }
 }

@@ -34,6 +34,7 @@ public class User extends BaseEntity {
     @ManyToOne(optional = false)
     private UserRole role;
 
+    @Column(columnDefinition = "LONGTEXT")
     private String imageUrl;
 
     @Column(nullable = false)
