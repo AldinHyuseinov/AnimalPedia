@@ -30,7 +30,8 @@ public class BeanConfiguration {
                         "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
                         "/animals/{specie-name}", "/pictures/upload/{specie-name}", "/api/admin/**").permitAll()
                 .requestMatchers("/users/all").hasRole(Role.ADMIN.name()) // "/api/admin/**" is not here, it is getting denied even when logged in as admin
-                .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/users/profile").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
+                .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/api/animals/add", "/users/profile")
+                .hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
                 .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
