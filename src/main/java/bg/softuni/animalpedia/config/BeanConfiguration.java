@@ -1,5 +1,6 @@
 package bg.softuni.animalpedia.config;
 
+import bg.softuni.animalpedia.models.enums.Role;
 import bg.softuni.animalpedia.repositories.UserRepository;
 import bg.softuni.animalpedia.services.UserDetailsServiceImpl;
 import org.modelmapper.ModelMapper;
@@ -27,8 +28,10 @@ public class BeanConfiguration {
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/", "/auth/login", "/auth/register", "/api/users/register",
                         "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
-                        "/animals/{specie-name}", "/pictures/upload/{specie-name}").permitAll()
-                .anyRequest().authenticated().and().formLogin().loginPage("/auth/login")
+                        "/animals/{specie-name}", "/pictures/upload/{specie-name}", "/api/admin/**").permitAll()
+                .requestMatchers("/users/all").hasRole(Role.ADMIN.name()) // "/api/admin/**" is not here, it is getting denied even when logged in as admin
+                .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/users/profile").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
+                .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                 .defaultSuccessUrl("/").failureForwardUrl("/auth/login-error").and()

@@ -21,4 +21,9 @@ public class RestAdvice {
     public ResponseEntity<String> onNotFound(NoSuchElementException nse) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(nse.getMessage());
     }
+
+    @ExceptionHandler(UnsupportedOperationException.class)
+    public ResponseEntity<String> onPromoteDemoteFailure(UnsupportedOperationException ooe) {
+        return ResponseEntity.badRequest().body(ooe.getMessage());
+    }
 }

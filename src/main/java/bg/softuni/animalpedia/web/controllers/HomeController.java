@@ -1,6 +1,6 @@
 package bg.softuni.animalpedia.web.controllers;
 
-import bg.softuni.animalpedia.models.AnimalOfTheDayTask;
+import bg.softuni.animalpedia.AnimalOfTheDayTask;
 import bg.softuni.animalpedia.models.dto.AnimalOfTheDayDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

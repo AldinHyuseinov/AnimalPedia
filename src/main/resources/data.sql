@@ -1,8 +1,10 @@
 INSERT INTO users(created, email, first_name, last_name, password, username, role_id)
-    VALUE (now(), 'Admin@example.com',
-           'Admin', 'Adminov',
-           '$2a$10$CR7JV7cChaODSvVWvDezYuFTwkMrs/waPzNWiZl7/rOIpXPZpD9nm',
-           'admincheto', 2);
+VALUES (now(), 'Admin@example.com',
+        'Admin', 'Adminov',
+        '$2a$10$CR7JV7cChaODSvVWvDezYuFTwkMrs/waPzNWiZl7/rOIpXPZpD9nm',
+        'admincheto', 2),
+       (now(), 'User@example.com', 'User', 'Userov', '$2a$12$.JqAXfBIMU5d9joUVSGm3O.xElPH5OizQS9bFIu0i7lu9k/tATP5q',
+        'usercheto', 2);
 
 INSERT INTO animals(phylum_id, animal_class_id, animal_order,
                     animal_family, genus, specie_name,

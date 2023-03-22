@@ -1,4 +1,4 @@
-package bg.softuni.animalpedia.models;
+package bg.softuni.animalpedia;
 
 import bg.softuni.animalpedia.models.dto.AnimalOfTheDayDTO;
 import bg.softuni.animalpedia.models.entities.Picture;
