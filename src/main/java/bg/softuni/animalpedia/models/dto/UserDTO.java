@@ -27,4 +27,6 @@ public class UserDTO {
     private LocalDateTime modified;
 
     private UserLinksDTO userLinks;
+
+    private boolean isBanned;
 }

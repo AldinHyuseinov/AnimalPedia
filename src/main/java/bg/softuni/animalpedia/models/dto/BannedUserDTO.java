@@ -1,16 +1,16 @@
 package bg.softuni.animalpedia.models.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class UserLinksDTO {
-    private String promoteLink;
+public class BannedUserDTO {
+    private String userUsername;
 
-    private String demoteLink;
-
-    private String unbanLink;
+    private String reason;
 }

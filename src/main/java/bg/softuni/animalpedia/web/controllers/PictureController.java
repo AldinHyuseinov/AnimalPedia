@@ -5,6 +5,7 @@ import bg.softuni.animalpedia.services.PictureService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -29,7 +30,7 @@ public class PictureController {
             redirectAttributes.addFlashAttribute("pictureModel", pictureModel);
         }
 
-        if (auth == null) {
+        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
             redirectAttributes.addFlashAttribute("userNotLoggedIn", "You must login to post a picture.");
         } else {
             isValid = true;

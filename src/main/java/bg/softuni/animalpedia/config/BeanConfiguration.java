@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,6 +22,7 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
+@EnableMethodSecurity
 public class BeanConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
@@ -29,7 +31,7 @@ public class BeanConfiguration {
                 .requestMatchers("/", "/auth/login", "/auth/register", "/api/users/register",
                         "/auth/login-error", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
                         "/animals/{specie-name}", "/pictures/upload/{specie-name}", "/api/admin/**").permitAll()
-                .requestMatchers("/users/all").hasRole(Role.ADMIN.name()) // "/api/admin/**" is not here, it is getting denied even when logged in as admin
+                .requestMatchers("/users/all").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/api/animals/add", "/users/profile")
                 .hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
                 .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")

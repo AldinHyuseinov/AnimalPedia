@@ -5,6 +5,7 @@ import bg.softuni.animalpedia.models.dto.UserLinksDTO;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/users")
@@ -50,6 +52,9 @@ public class UserController {
             UserLinksDTO userLinksDTO = new UserLinksDTO();
             userLinksDTO.setPromoteLink(promoteHref);
             userLinksDTO.setDemoteLink(demoteHref);
+
+            Optional<Link> unbanLink = user.getLink("unban");
+            unbanLink.ifPresent(link -> userLinksDTO.setUnbanLink(unbanLink.get().getHref()));
 
             user.getContent().setUserLinks(userLinksDTO);
             return user.getContent();

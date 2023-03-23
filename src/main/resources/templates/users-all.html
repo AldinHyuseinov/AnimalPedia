@@ -9,7 +9,7 @@
 <div th:replace="~{fragments/navbar}">Navbar</div>
 
 <div class="container my-5">
-    <h2 class="text-center text-white m-3">All Users</h2>
+    <h2 class="text-center m-3">All Users</h2>
     <div class="col-md-5 mr-auto d-flex flex-column">
         <table class="table">
             <tr>
@@ -22,6 +22,8 @@
                 <th>Account Modified</th>
                 <th>Promote?</th>
                 <th>Demote?</th>
+                <th>Ban?</th>
+                <th>Unban?</th>
             </tr>
             <tr th:each="u : ${users}">
                 <td><img th:src="${u.imageUrl == null} ? '/images/no-user-image-icon-23.jpg' : ${u.imageUrl}"
@@ -37,8 +39,29 @@
                             th:value="${u.userLinks.promoteLink}">Promote
                     </button>
                 </td>
+
                 <td>
-                    <button id="demote-link" class="btn btn-primary" th:value="${u.userLinks.demoteLink}">Demote
+                    <button id="demote-link" class="btn btn-danger" th:value="${u.userLinks.demoteLink}">Demote
+                    </button>
+                </td>
+
+                <td th:unless="${u.banned}">
+                    <button id="ban-link" class="btn btn-danger" th:value="${u.username}">Ban
+                    </button>
+                </td>
+
+                <td th:if="${u.banned}">
+                    <button class="btn btn-danger" disabled>Ban
+                    </button>
+                </td>
+
+                <td th:if="${u.banned}">
+                    <button id="unban-link" class="btn btn-primary" th:value="${u.userLinks.unbanLink}">Unban
+                    </button>
+                </td>
+
+                <td th:unless="${u.banned}">
+                    <button class="btn btn-primary" disabled>Unban
                     </button>
                 </td>
             </tr>
@@ -50,5 +73,7 @@
 
 <script src="/js/promote.js"></script>
 <script src="/js/demote.js"></script>
+<script src="/js/ban.js"></script>
+<script src="/js/unban.js"></script>
 </body>
 </html>
