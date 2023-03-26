@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -71,10 +70,6 @@ public class AdminRestController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/unban/{username}")
     public ResponseEntity<?> unbanUser(@PathVariable String username) {
-
-        if (!banService.isBanned(username)) {
-            throw new NoSuchElementException("User is not banned!");
-        }
         banService.unbanUser(username);
 
         return ResponseEntity.ok().build();

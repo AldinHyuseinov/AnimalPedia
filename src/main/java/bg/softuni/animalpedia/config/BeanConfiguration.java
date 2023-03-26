@@ -38,7 +38,7 @@ public class BeanConfiguration {
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)
                 .defaultSuccessUrl("/").failureForwardUrl("/auth/login-error").and()
-                .logout().invalidateHttpSession(true)
+                .logout().invalidateHttpSession(true).deleteCookies("JSESSIONID")
                 .logoutUrl("/users/logout").logoutSuccessUrl("/").and().securityContext()
                 .securityContextRepository(securityContextRepository()).and().csrf()
                 .ignoringRequestMatchers("/api/**");

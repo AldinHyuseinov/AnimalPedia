@@ -4,6 +4,8 @@ import bg.softuni.animalpedia.models.dto.AddPictureDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
 import bg.softuni.animalpedia.services.PictureService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -62,7 +64,7 @@ public class AnimalController {
     }
 
     @GetMapping("/{specie-name}")
-    public String animal(@PathVariable("specie-name") String name, Model model) {
+    public String animal(@PathVariable("specie-name") String name, Model model, HttpServletRequest request) {
         ResponseEntity<EntityModel<AnimalDetailsDTO>> response = restTemplate.exchange(API_URL + name,
                 HttpMethod.GET, null, new ParameterizedTypeReference<>() {
                 });
@@ -72,6 +74,11 @@ public class AnimalController {
         model.addAttribute("animal", animal.getContent());
         model.addAttribute("animalPictures", pictureService.allAnimalPicturesByName(name));
 
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("SPRING_SECURITY_CONTEXT") == null) {
+            // User is not logged in, create a new session for csrf token
+            request.getSession(true);
+        }
         return "animal-details";
     }
 

@@ -9,6 +9,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class BanService {
@@ -30,6 +32,10 @@ public class BanService {
     }
 
     public void unbanUser(String username) {
+
+        if (!isBanned(username)) {
+            throw new NoSuchElementException("User is not banned!");
+        }
         bannedUserRepository.deleteByUserUsername(username);
     }
 
