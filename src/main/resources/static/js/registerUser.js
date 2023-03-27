@@ -33,7 +33,7 @@ form.addEventListener('submit', function (event) {
             if (response.status === 400) {
                 manageResponse(response, data)
             } else {
-                window.location.href = 'http://localhost:8000/';
+                window.location.href = 'http://localhost:8000/?success=You+Successfully+Signed+Up!';
             }
         });
 });

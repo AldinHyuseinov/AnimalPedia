@@ -21,4 +21,6 @@ public class AnimalDTO {
     private LocalDateTime created;
 
     private String detailsLink;
+
+    private String deleteLink;
 }

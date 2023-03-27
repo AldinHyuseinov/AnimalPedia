@@ -1,13 +1,25 @@
 package bg.softuni.animalpedia.web.controllers;
 
+import bg.softuni.animalpedia.models.entities.User;
+import bg.softuni.animalpedia.repositories.UserRepository;
+import bg.softuni.animalpedia.services.EmailService;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Optional;
+import java.util.Random;
+
 @Controller
 @RequestMapping("/auth")
+@AllArgsConstructor(onConstructor_ = @Autowired)
 public class AuthenticationController {
+    private final UserRepository userRepository;
+
+    private final EmailService emailService;
 
     @GetMapping("/login")
     public String login() {
@@ -27,5 +39,35 @@ public class AuthenticationController {
     @GetMapping("/register")
     public String register() {
         return "register";
+    }
+
+    @GetMapping("/forgot-password/email")
+    public String emailPrompt() {
+        return "forgot-password-email";
+    }
+
+    @PostMapping("/forgot-password/email")
+    public String emailPrompt(@RequestParam("email") String userEmail, RedirectAttributes redirectAttributes) {
+        Optional<User> user = userRepository.findByEmail(userEmail);
+
+        if (user.isEmpty()) {
+            redirectAttributes.addFlashAttribute("invalidEmail", "Please enter a valid email!");
+
+            return "redirect:/auth/forgot-password/email";
+        }
+        emailService.sendForgotPasswordEmail(userEmail, user.get().getUsername(), generateRandomCode());
+
+        //TODO: to continue the process
+        return "redirect:/";
+    }
+
+    private String generateRandomCode() {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 4; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
     }
 }

@@ -76,6 +76,13 @@ public class UserRestController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteUserProfile(@AuthenticationPrincipal AppUser appUser) {
+        userService.deleteUser(appUser.getUsername());
+
+        return ResponseEntity.ok().build();
+    }
+
     private void hasErrors(BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             Map<String, String> fieldAndMessage = new HashMap<>();

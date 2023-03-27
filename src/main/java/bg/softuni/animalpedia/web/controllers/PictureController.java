@@ -28,6 +28,7 @@ public class PictureController {
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pictureModel", bindingResult);
             redirectAttributes.addFlashAttribute("pictureModel", pictureModel);
+            return "redirect:/animals/" + name;
         }
 
         if (auth == null || auth instanceof AnonymousAuthenticationToken) {

@@ -5,17 +5,20 @@ import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
 import bg.softuni.animalpedia.models.dto.AnimalOfTheDayDTO;
 import bg.softuni.animalpedia.models.entities.Animal;
+import bg.softuni.animalpedia.models.entities.Location;
 import bg.softuni.animalpedia.repositories.*;
 import lombok.AllArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static bg.softuni.animalpedia.services.UserService.userAuthorizationCheck;
 
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -35,6 +38,8 @@ public class AnimalService {
     private final SkinRepository skinRepository;
 
     private final UserRepository userRepository;
+
+    private final PictureRepository pictureRepository;
 
     private final ModelMapper mapper;
 
@@ -75,5 +80,30 @@ public class AnimalService {
         int index = random.nextInt(animals.size());
 
         return mapper.map(animals.get(index), AnimalOfTheDayDTO.class);
+    }
+
+    @Transactional
+    public void deleteAnimal(String specieName) {
+        Optional<Animal> animalOpt = animalRepository.findBySpecieName(specieName);
+
+        if (animalOpt.isEmpty()) {
+            throw new NoSuchElementException("Animal to delete doesn't exist!");
+        }
+        Animal animal = animalOpt.get();
+
+        if (!userAuthorizationCheck(animal.getAddedBy().getUsername())) {
+            throw new UnsupportedOperationException("Not allowed to delete!");
+        }
+
+        Set<Location> locations = animal.getLocations();
+        locations.clear();
+        animal.setAddedBy(null);
+        pictureRepository.deleteByAnimal(animal);
+
+        animalRepository.delete(animal);
+    }
+
+    public Set<Animal> allAnimalsByUser(String username) {
+        return animalRepository.findAllByAddedByUsername(username);
     }
 }

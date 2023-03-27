@@ -49,8 +49,10 @@ public class AnimalController {
         CollectionModel<EntityModel<AnimalDTO>> animals = response.getBody();
 
         List<AnimalDTO> animalList = animals.getContent().stream().map(animal -> {
-            String href = animal.getLink("self").get().getHref();
-            animal.getContent().setDetailsLink(href.replace("/api", ""));
+            String selfHref = animal.getLink("self").get().getHref();
+            animal.getContent().setDetailsLink(selfHref.replace("/api", ""));
+            String deleteHref = animal.getLink("delete").get().getHref();
+            animal.getContent().setDeleteLink(deleteHref);
             return animal.getContent();
         }).toList();
 

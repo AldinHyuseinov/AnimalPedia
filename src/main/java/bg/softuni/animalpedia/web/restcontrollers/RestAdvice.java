@@ -23,7 +23,7 @@ public class RestAdvice {
     }
 
     @ExceptionHandler(UnsupportedOperationException.class)
-    public ResponseEntity<String> onPromoteDemoteFailure(UnsupportedOperationException ooe) {
+    public ResponseEntity<String> onFailedOperations(UnsupportedOperationException ooe) {
         return ResponseEntity.badRequest().body(ooe.getMessage());
     }
 }

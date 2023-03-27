@@ -3,6 +3,7 @@ package bg.softuni.animalpedia.services;
 import bg.softuni.animalpedia.models.dto.EditUserDTO;
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
 import bg.softuni.animalpedia.models.dto.UserDTO;
+import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.User;
 import bg.softuni.animalpedia.models.enums.Role;
 import bg.softuni.animalpedia.repositories.UserRepository;
@@ -10,8 +11,12 @@ import bg.softuni.animalpedia.repositories.UserRoleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 @Service
@@ -32,6 +38,10 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     private final UserDetailsService userDetailsService;
+
+    private final AnimalService animalService;
+
+    private final BanService banService;
 
     private final ModelMapper mapper;
 
@@ -104,6 +114,32 @@ public class UserService {
             throw new UnsupportedOperationException("Can't demote more than role User!");
         }
         userRepository.save(user);
+    }
+
+    public static boolean userAuthorizationCheck(String username) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return false;
+        }
+        return authentication.getName().equals(username) ||
+                authentication.getAuthorities()
+                        .contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
+                authentication.getAuthorities()
+                        .contains(new SimpleGrantedAuthority("ROLE_MODERATOR"));
+    }
+
+    public void deleteUser(String username) {
+        Set<Animal> animals = animalService.allAnimalsByUser(username);
+        animals.forEach(animal -> animalService.deleteAnimal(animal.getSpecieName()));
+
+        if (banService.isBanned(username)) {
+            banService.unbanUser(username);
+        }
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(null);
+        userRepository.deleteByUsername(username);
     }
 
     private void login(Consumer<Authentication> loginProcessor, UserDetails userDetails) {

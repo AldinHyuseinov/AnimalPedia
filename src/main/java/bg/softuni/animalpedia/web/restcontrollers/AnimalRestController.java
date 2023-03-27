@@ -70,7 +70,8 @@ public class AnimalRestController {
 
         List<EntityModel<AnimalDTO>> animalModels = animals.stream()
                 .map(animal -> EntityModel.of(animal,
-                        linkTo(methodOn(AnimalRestController.class).animalByName(animal.getSpecieName())).withSelfRel()))
+                        linkTo(methodOn(AnimalRestController.class).animalByName(animal.getSpecieName())).withSelfRel(),
+                        linkTo(methodOn(AnimalRestController.class).deleteAnimal(animal.getSpecieName())).withRel("delete")))
                 .collect(Collectors.toList());
 
         CollectionModel<EntityModel<AnimalDTO>> collectionModel = CollectionModel.of(animalModels);
@@ -87,5 +88,12 @@ public class AnimalRestController {
 
         return ResponseEntity.ok(EntityModel.of(animal,
                 linkTo(methodOn(AnimalRestController.class).animalByName(name)).withSelfRel()));
+    }
+
+    @DeleteMapping("/delete/{specie-name}")
+    public ResponseEntity<?> deleteAnimal(@PathVariable("specie-name") String name) {
+        animalService.deleteAnimal(name);
+
+        return ResponseEntity.ok().build();
     }
 }

@@ -15,4 +15,6 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     @Query("SELECT l.continent FROM Animal a JOIN a.locations l WHERE a.specieName = :specieName")
     Set<Continent> getContinentsBySpecie(String specieName);
+
+    Set<Animal> findAllByAddedByUsername(String username);
 }
