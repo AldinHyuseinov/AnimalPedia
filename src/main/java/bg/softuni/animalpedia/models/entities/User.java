@@ -41,4 +41,6 @@ public class User extends BaseEntity {
     private LocalDateTime created;
 
     private LocalDateTime modified;
+
+    private String verificationCode;
 }

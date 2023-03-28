@@ -30,3 +30,9 @@ mail:
   username: "test@example.com"
   password: ""
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+

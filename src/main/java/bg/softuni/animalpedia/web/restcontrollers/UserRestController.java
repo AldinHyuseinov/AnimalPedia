@@ -3,15 +3,14 @@ package bg.softuni.animalpedia.web.restcontrollers;
 import bg.softuni.animalpedia.models.AppUser;
 import bg.softuni.animalpedia.models.dto.EditUserDTO;
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
+import bg.softuni.animalpedia.services.EmailService;
 import bg.softuni.animalpedia.services.UserService;
-import bg.softuni.animalpedia.utils.exceptions.FormException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,20 +20,22 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import static bg.softuni.animalpedia.utils.ErrorHelper.hasErrors;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
     private final UserService userService;
 
+    private final EmailService emailService;
+
     private final SecurityContextRepository securityContextRepository;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRestController.class);
 
-    public UserRestController(UserService userService, SecurityContextRepository securityContextRepository) {
+    public UserRestController(UserService userService, EmailService emailService, SecurityContextRepository securityContextRepository) {
         this.userService = userService;
+        this.emailService = emailService;
         this.securityContextRepository = securityContextRepository;
     }
 
@@ -54,6 +55,7 @@ public class UserRestController {
             securityContextRepository.saveContext(context, httpServletRequest, httpServletResponse);
         });
         LOGGER.info("Registered and logged in user with username: {}", registerUserDTO.getUsername());
+        emailService.sendWelcomeEmail(registerUserDTO.getEmail(), registerUserDTO.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
@@ -81,14 +83,5 @@ public class UserRestController {
         userService.deleteUser(appUser.getUsername());
 
         return ResponseEntity.ok().build();
-    }
-
-    private void hasErrors(BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> fieldAndMessage = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(fieldError -> fieldAndMessage.put(fieldError.getField(),
-                    fieldError.getDefaultMessage()));
-            throw new FormException(fieldAndMessage);
-        }
     }
 }

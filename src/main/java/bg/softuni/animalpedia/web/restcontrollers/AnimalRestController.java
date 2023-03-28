@@ -7,7 +7,6 @@ import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
 import bg.softuni.animalpedia.models.entities.Picture;
 import bg.softuni.animalpedia.services.AnimalService;
 import bg.softuni.animalpedia.services.PictureService;
-import bg.softuni.animalpedia.utils.exceptions.FormException;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +18,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static bg.softuni.animalpedia.utils.ErrorHelper.hasErrors;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -46,12 +44,7 @@ public class AnimalRestController {
     public ResponseEntity<?> addAnimal(@RequestBody @Valid AddAnimalDTO addAnimalDTO, BindingResult bindingResult,
                                        @AuthenticationPrincipal AppUser appUser) {
 
-        if (bindingResult.hasErrors()) {
-            Map<String, String> fieldAndMessage = new HashMap<>();
-            bindingResult.getFieldErrors().forEach(fieldError -> fieldAndMessage.put(fieldError.getField(),
-                    fieldError.getDefaultMessage()));
-            throw new FormException(fieldAndMessage);
-        }
+        hasErrors(bindingResult);
         animalService.addAnimal(addAnimalDTO, appUser.getUsername());
 
         LOGGER.info("Added animal: {}", addAnimalDTO.getSpecieName());

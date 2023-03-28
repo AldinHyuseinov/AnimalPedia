@@ -32,7 +32,7 @@ public class BeanConfiguration {
                         "/animals/{specie-name}", "/pictures/upload/{specie-name}", "/api/admin/**").permitAll()
                 .requestMatchers("/users/all").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/api/animals/add",
-                        "/api/animals/delete/{specie-name}", "/api/users/delete", "/users/profile")
+                        "/api/animals/delete/{specie-name}", "/api/users/delete", "/users/profile", "/api/fun-fact/add")
                 .hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
                 .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)

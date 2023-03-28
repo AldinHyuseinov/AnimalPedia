@@ -27,10 +27,7 @@ public class AnimalOfTheDayTask {
         this.pictureService = pictureService;
     }
 
-    // Uncomment below to run every 10 seconds for testing
-    // @Scheduled(cron = "*/10 * * * * *")
-    // Scheduled task to run every day at 8am
-    @Scheduled(cron = "0 0 8 * * *", zone = "Europe/Sofia")
+    @Scheduled(fixedRate = 86400000) // every 24 hours
     public void animalOfTheDay() {
         animalOfTheDay = animalService.randomAnimal();
 

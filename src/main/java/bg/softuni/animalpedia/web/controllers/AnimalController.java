@@ -3,6 +3,8 @@ package bg.softuni.animalpedia.web.controllers;
 import bg.softuni.animalpedia.models.dto.AddPictureDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
+import bg.softuni.animalpedia.repositories.FunFactRepository;
+import bg.softuni.animalpedia.services.FunFactService;
 import bg.softuni.animalpedia.services.PictureService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -28,11 +30,14 @@ public class AnimalController {
 
     private final PictureService pictureService;
 
+    private final FunFactService funFactService;
+
     private static final String API_URL = "http://localhost:8000/api/animals/";
 
-    public AnimalController(RestTemplate restTemplate, PictureService pictureService) {
+    public AnimalController(RestTemplate restTemplate, PictureService pictureService, FunFactService funFactService) {
         this.restTemplate = restTemplate;
         this.pictureService = pictureService;
+        this.funFactService = funFactService;
     }
 
     @GetMapping("/add")
@@ -81,6 +86,8 @@ public class AnimalController {
             // User is not logged in, create a new session for csrf token
             request.getSession(true);
         }
+        model.addAttribute("animalFunFacts", funFactService.getFactsByAnimalName(name));
+
         return "animal-details";
     }
 

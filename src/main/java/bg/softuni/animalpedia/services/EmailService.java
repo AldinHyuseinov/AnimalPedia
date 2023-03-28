@@ -29,7 +29,7 @@ public class EmailService {
             mimeMessageHelper.setTo(userEmail);
 
             mimeMessageHelper.setSubject("Your verification code");
-            mimeMessageHelper.setText(generateEmailText(username, code), true);
+            mimeMessageHelper.setText(generateEmailTextForForgottenPassword(username, code), true);
 
             javaMailSender.send(mimeMessageHelper.getMimeMessage());
 
@@ -38,12 +38,38 @@ public class EmailService {
         }
     }
 
-    private String generateEmailText(String username, String code) {
+    public void sendWelcomeEmail(String userEmail, String username) {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage);
+
+        try {
+            mimeMessageHelper.setFrom("animalpedia@example.com");
+            mimeMessageHelper.setTo(userEmail);
+
+            mimeMessageHelper.setSubject("Welcome!");
+            mimeMessageHelper.setText(generateEmailTextForWelcomeEmail(username), true);
+
+            javaMailSender.send(mimeMessageHelper.getMimeMessage());
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String generateEmailTextForForgottenPassword(String username, String code) {
         Context ctx = new Context();
         ctx.setLocale(Locale.getDefault());
         ctx.setVariable("username", username);
         ctx.setVariable("code", code);
 
         return templateEngine.process("email/forgotten-password", ctx);
+    }
+
+    private String generateEmailTextForWelcomeEmail(String username) {
+        Context ctx = new Context();
+        ctx.setLocale(Locale.getDefault());
+        ctx.setVariable("username", username);
+
+        return templateEngine.process("email/welcome", ctx);
     }
 }

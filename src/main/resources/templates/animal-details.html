@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/head}"></head>
 
@@ -125,6 +126,23 @@
                             </dl>
                         </div>
                     </div>
+                    <div class="col-lg-6">
+                        <div class="card-body">
+                            <h2 class="card-title text-start text-black mb-3">Fun Facts</h2>
+                            <th:block th:unless="${animalFunFacts.isEmpty()}" th:each="f : ${animalFunFacts}">
+                                <p th:text="${f}"></p>
+                            </th:block>
+                            <p sec:authorize="isAuthenticated()">Wanna add facts?
+                                <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal">Add
+                                </button>
+                            </p>
+                            <p th:unless="${animalFunFacts.isEmpty()}"
+                               th:text="'Wanna see more facts for ' + ${animal.specieName} + '?'"><a
+                                    th:href="@{/animals/fun-facts/{specie-name}(specie-name=${animal.specieName})}">See
+                                More</a></p>
+                        </div>
+                    </div>
                 </div>
             </div>
             <h5 class="mb-3" th:text="${animal.description}"></h5>
@@ -160,11 +178,36 @@
                     </button>
                 </div>
             </div>
-
         </main>
     </div>
 
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Fun Fact</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="fact" class="col-form-label">Type here:</label>
+                            <textarea class="form-control" id="fact"></textarea>
+                            <p id="fact-error" class="errors alert alert-danger" style="display: none"></p>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="addFact" th:value="${animal.specieName}" type="button" class="btn btn-primary">Ok</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+<script src="/js/addFact.js"></script>
+<script src="/js/manageResponse.js"></script>
 
 <div th:replace="~{fragments/footer}">Footer</div>
 

@@ -2,6 +2,7 @@ package bg.softuni.animalpedia.services;
 
 import bg.softuni.animalpedia.models.dto.EditUserDTO;
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
+import bg.softuni.animalpedia.models.dto.ResetPasswordDTO;
 import bg.softuni.animalpedia.models.dto.UserDTO;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.User;
@@ -11,6 +12,7 @@ import bg.softuni.animalpedia.repositories.UserRoleRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,9 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 @Service
@@ -140,6 +140,42 @@ public class UserService {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(null);
         userRepository.deleteByUsername(username);
+    }
+
+    public Optional<User> userByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail);
+    }
+
+    public String getVerificationCodeForUserEmail(String userEmail) {
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < 4; i++) {
+            sb.append(random.nextInt(10));
+        }
+        String code = sb.toString();
+
+        User user = userByEmail(userEmail).get();
+        user.setVerificationCode(code);
+        userRepository.save(user);
+
+        return code;
+    }
+
+    public void resetPassword(String email, ResetPasswordDTO resetPasswordDTO) {
+        User user = userByEmail(email).get();
+        user.setVerificationCode(null);
+        user.setPassword(passwordEncoder.encode(resetPasswordDTO.getPassword()));
+
+        userRepository.save(user);
+    }
+
+    @Scheduled(fixedRate = 3600000) // runs every hour
+    public void cleanupVerificationCodes() {
+        Set<User> users = userRepository.findAllByVerificationCodeNotNull();
+        users.forEach(user -> user.setVerificationCode(null));
+
+        userRepository.saveAll(users);
     }
 
     private void login(Consumer<Authentication> loginProcessor, UserDetails userDetails) {

@@ -41,6 +41,8 @@ public class AnimalService {
 
     private final PictureRepository pictureRepository;
 
+    private final FunFactRepository funFactRepository;
+
     private final ModelMapper mapper;
 
     public void addAnimal(AddAnimalDTO addAnimalDTO, String username) {
@@ -99,6 +101,7 @@ public class AnimalService {
         locations.clear();
         animal.setAddedBy(null);
         pictureRepository.deleteByAnimal(animal);
+        funFactRepository.deleteByForAnimalSpecieName(specieName);
 
         animalRepository.delete(animal);
     }
