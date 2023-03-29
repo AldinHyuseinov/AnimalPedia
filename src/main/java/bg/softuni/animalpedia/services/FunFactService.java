@@ -9,8 +9,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
@@ -28,7 +29,15 @@ public class FunFactService {
         funFactRepository.save(funFact);
     }
 
-    public Set<String> getFactsByAnimalName(String specieName) {
-        return funFactRepository.findAllByForAnimalSpecieName(specieName).stream().map(FunFact::getFact).collect(Collectors.toSet());
+    public String getRandomFunFactAbout(String specieName) {
+        Random random = new Random();
+
+        List<FunFact> funFacts = funFactRepository.findAllByForAnimalSpecieName(specieName);
+
+        if (funFacts.isEmpty()) {
+            throw new NoSuchElementException("Cannot find fun fact for the animal " + specieName + "!");
+        }
+
+        return funFacts.get(random.nextInt(0, funFacts.size())).getFact();
     }
 }

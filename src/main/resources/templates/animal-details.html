@@ -65,42 +65,46 @@
 
                         <div class="card-body">
                             <h2 class="text-start mb-4">Add Picture</h2>
-                            <form onsubmit="return isPicture()"
-                                  th:action="@{/pictures/upload/{specie-name}(specie-name=${animal.specieName})}"
-                                  th:method="POST"
-                                  th:object="${pictureModel}"
-                                  enctype="multipart/form-data"
-                                  class="w-100">
+                            <p sec:authorize="!isAuthenticated()">You need to <a href="/auth/login">login</a> to add a
+                                picture</p>
 
-                                <div class="form-group w-100">
-                                    <label>
-                                        <input th:field="*{title}" type="text" name="title" class="form-control"
-                                               placeholder="Enter picture title">
-                                    </label>
-                                </div>
-                                <div class="image-upload d-flex">
-                                    <label for="picture" class="w-100 text-center">
-                                        <img id="previewImage" src="/images/add-img.png" alt=""
-                                             class="d-flex justify-content-start w-50 mb-2 mt-2"/>
-                                    </label>
-                                    <input onchange="picToString()" style="display: none" id="picture" type="file"
-                                           name="picture"/>
-                                    <input th:field="*{url}" type="hidden" id="picString">
-                                </div>
-                                <div class="form-group w-100 mx-5">
-                                    <button class="btn btn-primary rounded mb-2 mt-2">Upload Picture</button>
-                                </div>
-                                <strong id="pictureRequiredError"
-                                        class="form-text bg-danger rounded" style="display: none">A picture must be
-                                    selected.</strong>
-                                <strong id="pictureFormatError"
-                                        class="form-text bg-danger rounded" style="display: none">Must be valid picture
-                                    format.</strong>
-                                <strong th:if="${userNotLoggedIn}" th:text="${userNotLoggedIn}"
-                                        class="form-text bg-danger rounded"></strong>
-                                <strong th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
-                                        class="form-text bg-danger rounded"></strong>
-                            </form>
+                            <th:block sec:authorize="isAuthenticated()">
+                                <form onsubmit="return isPicture()"
+                                      th:action="@{/pictures/upload/{specie-name}(specie-name=${animal.specieName})}"
+                                      th:method="POST"
+                                      th:object="${pictureModel}"
+                                      enctype="multipart/form-data"
+                                      class="w-100">
+
+                                    <div class="form-group w-100">
+                                        <label>
+                                            <input th:field="*{title}" type="text" name="title" class="form-control"
+                                                   placeholder="Enter picture title">
+                                        </label>
+                                    </div>
+                                    <div class="image-upload d-flex">
+                                        <label for="picture" class="w-100 text-center">
+                                            <img id="previewImage" src="/images/add-img.png" alt=""
+                                                 class="d-flex justify-content-start w-50 mb-2 mt-2"/>
+                                        </label>
+                                        <input onchange="picToString()" style="display: none" id="picture" type="file"
+                                               name="picture"/>
+                                        <input th:field="*{url}" type="hidden" id="picString">
+                                    </div>
+                                    <div class="form-group w-100 mx-5">
+                                        <button class="btn btn-primary rounded mb-2 mt-2">Upload Picture</button>
+                                    </div>
+                                    <strong id="pictureRequiredError"
+                                            class="form-text bg-danger rounded" style="display: none">A picture must be
+                                        selected.</strong>
+                                    <strong id="pictureFormatError"
+                                            class="form-text bg-danger rounded" style="display: none">Must be valid
+                                        picture
+                                        format.</strong>
+                                    <strong th:if="${#fields.hasErrors('title')}" th:errors="*{title}"
+                                            class="form-text bg-danger rounded"></strong>
+                                </form>
+                            </th:block>
                         </div>
 
                     </div>
@@ -128,19 +132,18 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="card-body">
-                            <h2 class="card-title text-start text-black mb-3">Fun Facts</h2>
-                            <th:block th:unless="${animalFunFacts.isEmpty()}" th:each="f : ${animalFunFacts}">
-                                <p th:text="${f}"></p>
-                            </th:block>
+                            <h2 class="card-title text-start text-black mb-3">Fun Fact</h2>
+                            <span id="randomFact">Wanna see a random fact for this animal?</span>
+                            <button id="randomFactButton" th:value="${animal.specieName}" type="button"
+                                    class="btn btn-primary btn-sm">See!
+                            </button>
                             <p sec:authorize="isAuthenticated()">Wanna add facts?
                                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                         data-bs-target="#exampleModal">Add
                                 </button>
                             </p>
-                            <p th:unless="${animalFunFacts.isEmpty()}"
-                               th:text="'Wanna see more facts for ' + ${animal.specieName} + '?'"><a
-                                    th:href="@{/animals/fun-facts/{specie-name}(specie-name=${animal.specieName})}">See
-                                More</a></p>
+                            <p sec:authorize="!isAuthenticated()" class="mt-3">If you want to add a fun fact you need to
+                                <a href="/auth/login">login!</a></p>
                         </div>
                     </div>
                 </div>
@@ -155,7 +158,7 @@
                             <img src="/images/animals.jpg" class="d-block w-100" alt="Slide 1" style="height: 500px;">
                             <div class="carousel-caption d-none d-md-block">
                                 <h5>Welcome to the Gallery!</h5>
-                                <p th:text="'Slide around to see pictures of a ' + ${animal.specieName} + ' if there are any.'"></p>
+                                <p th:text="'Slide around to see pictures of ' + ${animal.specieName} + ' if there are any.'"></p>
                             </div>
                         </div>
                         <div th:each="p : ${animalPictures}" class="carousel-item">
@@ -199,7 +202,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="addFact" th:value="${animal.specieName}" type="button" class="btn btn-primary">Ok</button>
+                    <button id="addFact" th:value="${animal.specieName}" type="button" class="btn btn-primary">Ok
+                    </button>
                 </div>
             </div>
         </div>
@@ -207,6 +211,7 @@
 
 </div>
 <script src="/js/addFact.js"></script>
+<script src="/js/getRandomFunFact.js"></script>
 <script src="/js/manageResponse.js"></script>
 
 <div th:replace="~{fragments/footer}">Footer</div>

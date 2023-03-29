@@ -5,11 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
 
-import java.util.Set;
+import java.util.List;
 
 @Repository
 public interface FunFactRepository extends JpaRepository<FunFact, Long> {
-    Set<FunFact> findAllByForAnimalSpecieName(String specieName);
+    List<FunFact> findAllByForAnimalSpecieName(String specieName);
 
     @Modifying
     void deleteByForAnimalSpecieName(String specieName);

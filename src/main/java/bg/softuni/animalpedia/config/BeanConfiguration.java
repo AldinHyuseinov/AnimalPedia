@@ -29,10 +29,10 @@ public class BeanConfiguration {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                 .requestMatchers("/", "/auth/**", "/api/users/register", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
-                        "/animals/{specie-name}", "/pictures/upload/{specie-name}", "/api/admin/**").permitAll()
+                        "/animals/{specie-name}", "/api/admin/**", "/api/fun-fact/{specie-name}").permitAll()
                 .requestMatchers("/users/all").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/api/animals/add",
-                        "/api/animals/delete/{specie-name}", "/api/users/delete", "/users/profile", "/api/fun-fact/add")
+                        "/api/animals/delete/{specie-name}", "/api/users/delete", "/users/profile", "/api/fun-fact/add", "/pictures/upload/{specie-name}")
                 .hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.MODERATOR.name())
                 .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)

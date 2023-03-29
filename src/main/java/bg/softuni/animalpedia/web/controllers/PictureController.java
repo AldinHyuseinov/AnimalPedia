@@ -1,18 +1,20 @@
 package bg.softuni.animalpedia.web.controllers;
 
+import bg.softuni.animalpedia.models.AppUser;
 import bg.softuni.animalpedia.models.dto.AddPictureDTO;
 import bg.softuni.animalpedia.services.PictureService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static bg.softuni.animalpedia.utils.ErrorHelper.hasErrors;
 
 @Controller
 @RequestMapping("/pictures")
@@ -22,8 +24,7 @@ public class PictureController {
 
     @PostMapping("/upload/{specie-name}")
     public String uploadPicture(@Valid AddPictureDTO pictureModel, BindingResult bindingResult,
-                                RedirectAttributes redirectAttributes, Authentication auth, @PathVariable("specie-name") String name) {
-        boolean isValid = false;
+                                RedirectAttributes redirectAttributes, @AuthenticationPrincipal AppUser appUser, @PathVariable("specie-name") String name) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.pictureModel", bindingResult);
@@ -31,16 +32,9 @@ public class PictureController {
             return "redirect:/animals/" + name;
         }
 
-        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
-            redirectAttributes.addFlashAttribute("userNotLoggedIn", "You must login to post a picture.");
-        } else {
-            isValid = true;
-        }
+        pictureModel.setSpecieName(name);
+        pictureService.addPicture(pictureModel, appUser.getUsername());
 
-        if (isValid) {
-            pictureModel.setSpecieName(name);
-            pictureService.addPicture(pictureModel, auth.getName());
-        }
         return "redirect:/animals/" + name;
     }
 }
