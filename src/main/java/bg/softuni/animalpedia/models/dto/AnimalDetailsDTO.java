@@ -5,6 +5,7 @@ import bg.softuni.animalpedia.models.enums.Class;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +41,10 @@ public class AnimalDetailsDTO {
     private Integer lifespan;
 
     private String description;
+
+    private LocalDateTime modified;
+
+    private boolean verified;
 
     public AnimalDetailsDTO() {
         continents = new HashSet<>();

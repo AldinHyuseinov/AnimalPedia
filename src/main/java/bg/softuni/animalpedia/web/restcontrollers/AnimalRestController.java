@@ -4,6 +4,7 @@ import bg.softuni.animalpedia.models.AppUser;
 import bg.softuni.animalpedia.models.dto.AddAnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
+import bg.softuni.animalpedia.models.dto.EditAnimalDTO;
 import bg.softuni.animalpedia.models.entities.Picture;
 import bg.softuni.animalpedia.services.AnimalService;
 import bg.softuni.animalpedia.services.PictureService;
@@ -46,7 +47,6 @@ public class AnimalRestController {
 
         hasErrors(bindingResult);
         animalService.addAnimal(addAnimalDTO, appUser.getUsername());
-
         LOGGER.info("Added animal: {}", addAnimalDTO.getSpecieName());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
@@ -86,6 +86,29 @@ public class AnimalRestController {
     @DeleteMapping("/delete/{specie-name}")
     public ResponseEntity<?> deleteAnimal(@PathVariable("specie-name") String name) {
         animalService.deleteAnimal(name);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<?> editAnimal(@RequestBody @Valid EditAnimalDTO editAnimalDTO, BindingResult bindingResult) {
+        hasErrors(bindingResult);
+        animalService.editAnimal(editAnimalDTO);
+        LOGGER.info("Edited animal: {}", editAnimalDTO.getSpecieName());
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/verify/{specie-name}")
+    public ResponseEntity<?> verifyAnimal(@PathVariable("specie-name") String name) {
+        animalService.verifyAnimal(name);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/unverify/{specie-name}")
+    public ResponseEntity<?> unverifyAnimal(@PathVariable("specie-name") String name) {
+        animalService.unverifyAnimal(name);
 
         return ResponseEntity.ok().build();
     }

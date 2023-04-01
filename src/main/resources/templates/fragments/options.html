@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Options</title>
+</head>
+<body>
+<th:block th:fragment="animalPhylumOptions">
+    <option value="">Select phylum</option>
+    <option value="SPONGE">Sponge</option>
+    <option value="CNIDARIAN">Cnidarian</option>
+    <option value="FLATWORM">Flatworm</option>
+    <option value="ANNELID">Annelid</option>
+    <option value="MOLLUSK">Mollusk</option>
+    <option value="ARTHROPOD">Arthropod</option>
+    <option value="CHORDATE">Chordate</option>
+</th:block>
+
+<th:block th:fragment="animalClassOptions">
+    <option value="">Select animal class</option>
+    <option value="JAWLESS_FISH">Jaw-less Fish</option>
+    <option value="CARTILAGINOUS_FISH">Cartilaginous Fish</option>
+    <option value="BONY_FISH">Bony Fish</option>
+    <option value="AMPHIBIAN">Amphibian</option>
+    <option value="REPTILE">Reptile</option>
+    <option value="BIRD">Bird</option>
+    <option value="MAMMAL">Mammal</option>
+</th:block>
+
+<th:block th:fragment="animalStatusOptions">
+    <option value="">Select conservation status</option>
+    <option value="EXTINCT">Extinct</option>
+    <option value="EXTINCT_IN_THE_WILD">Extinct in the Wild</option>
+    <option value="CRITICALLY_ENDANGERED">Critically Endangered</option>
+    <option value="ENDANGERED">Endangered</option>
+    <option value="VULNERABLE">Vulnerable</option>
+    <option value="NEAR_THREATENED">Near Threatened</option>
+    <option value="CONSERVATION_DEPENDENT">Conservation Dependent</option>
+    <option value="LEAST_CONCERN">Least Concern</option>
+    <option value="DATA_DEFICIENT">Data Deficient</option>
+    <option value="NOT_EVALUATED">Not Evaluated</option>
+</th:block>
+
+<th:block th:fragment="animalDietOptions">
+    <option value="">Select animal diet</option>
+    <option value="HERBIVOROUS">Herbivorous</option>
+    <option value="CARNIVOROUS">Carnivorous</option>
+    <option value="OMNIVOROUS">Omnivorous</option>
+</th:block>
+
+<th:block th:fragment="animalSkinTypeOptions">
+    <option value="">Select skin type</option>
+    <option value="SCALES">Scales</option>
+    <option value="FUR">Fur</option>
+    <option value="FEATHERS">Feathers</option>
+    <option value="SHELL">Shell</option>
+</th:block>
+</body>
+</html>

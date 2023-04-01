@@ -20,14 +20,7 @@
                     <label for="phylumType">Phylum</label>
                     <select class="form-control" id="phylumType" name="phylumType">
                         <!-- Options here -->
-                        <option value="">Select phylum</option>
-                        <option value="SPONGE">Sponge</option>
-                        <option value="CNIDARIAN">Cnidarian</option>
-                        <option value="FLATWORM">Flatworm</option>
-                        <option value="ANNELID">Annelid</option>
-                        <option value="MOLLUSK">Mollusk</option>
-                        <option value="ARTHROPOD">Arthropod</option>
-                        <option value="CHORDATE">Chordate</option>
+                        <th:block th:insert="~{fragments/options :: animalPhylumOptions}"></th:block>
                     </select>
                     <p id="phylumType-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
@@ -37,14 +30,7 @@
                     <label for="animalClass">Class</label>
                     <select class="form-control" id="animalClass" name="animalClass">
                         <!-- Options here -->
-                        <option value="">Select animal class</option>
-                        <option value="JAWLESS_FISH">Jaw-less Fish</option>
-                        <option value="CARTILAGINOUS_FISH">Cartilaginous Fish</option>
-                        <option value="BONY_FISH">Bony Fish</option>
-                        <option value="AMPHIBIAN">Amphibian</option>
-                        <option value="REPTILE">Reptile</option>
-                        <option value="BIRD">Bird</option>
-                        <option value="MAMMAL">Mammal</option>
+                        <th:block th:insert="~{fragments/options :: animalClassOptions}"></th:block>
                     </select>
                     <p id="animalClass-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
@@ -93,17 +79,7 @@
                     <label for="conservationStatus">Conservation Status</label>
                     <select class="form-control" id="conservationStatus" name="conservationStatus">
                         <!-- Options here -->
-                        <option value="">Select conservation status</option>
-                        <option value="EXTINCT">Extinct</option>
-                        <option value="EXTINCT_IN_THE_WILD">Extinct in the Wild</option>
-                        <option value="CRITICALLY_ENDANGERED">Critically Endangered</option>
-                        <option value="ENDANGERED">Endangered</option>
-                        <option value="VULNERABLE">Vulnerable</option>
-                        <option value="NEAR_THREATENED">Near Threatened</option>
-                        <option value="CONSERVATION_DEPENDENT">Conservation Dependent</option>
-                        <option value="LEAST_CONCERN">Least Concern</option>
-                        <option value="DATA_DEFICIENT">Data Deficient</option>
-                        <option value="NOT_EVALUATED">Not Evaluated</option>
+                        <th:block th:insert="~{fragments/options :: animalStatusOptions}"></th:block>
                     </select>
                     <p id="conservationStatus-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
@@ -119,10 +95,7 @@
                     <label for="dietType">Diet Type</label>
                     <select class="form-control" id="dietType" name="dietType">
                         <!-- Options here -->
-                        <option value="">Select animal diet</option>
-                        <option value="HERBIVOROUS">Herbivorous</option>
-                        <option value="CARNIVOROUS">Carnivorous</option>
-                        <option value="OMNIVOROUS">Omnivorous</option>
+                        <th:block th:insert="~{fragments/options :: animalDietOptions}"></th:block>
                     </select>
                     <p id="dietType-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
@@ -132,11 +105,7 @@
                     <label for="skinType">Skin Type</label>
                     <select class="form-control" id="skinType" name="skinType">
                         <!-- Options here -->
-                        <option value="">Select skin type</option>
-                        <option value="SCALES">Scales</option>
-                        <option value="FUR">Fur</option>
-                        <option value="FEATHERS">Feathers</option>
-                        <option value="SHELL">Shell</option>
+                        <th:block th:insert="~{fragments/options :: animalSkinTypeOptions}"></th:block>
                     </select>
                     <p id="skinType-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
@@ -151,7 +120,7 @@
                 <!-- Description -->
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <textarea class="form-control" id="description" name="description"></textarea>
+                    <textarea class="form-control" id="description" name="description" style="height: 102px;"></textarea>
                     <p id="description-error" class="errors alert alert-danger" style="display: none"></p>
                 </div>
 
@@ -215,6 +184,7 @@
     </form>
 </div>
 <script src="/js/addAnimal.js"></script>
+<script src="/js/getAnimalData.js"></script>
 <script src="/js/manageResponse.js"></script>
 
 <div th:replace="~{fragments/footer}">Footer</div>

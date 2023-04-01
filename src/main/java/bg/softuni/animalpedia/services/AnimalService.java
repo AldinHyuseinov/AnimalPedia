@@ -1,9 +1,6 @@
 package bg.softuni.animalpedia.services;
 
-import bg.softuni.animalpedia.models.dto.AddAnimalDTO;
-import bg.softuni.animalpedia.models.dto.AnimalDTO;
-import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
-import bg.softuni.animalpedia.models.dto.AnimalOfTheDayDTO;
+import bg.softuni.animalpedia.models.dto.*;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.Location;
 import bg.softuni.animalpedia.repositories.*;
@@ -47,11 +44,7 @@ public class AnimalService {
 
     public void addAnimal(AddAnimalDTO addAnimalDTO, String username) {
         Animal animal = mapper.map(addAnimalDTO, Animal.class);
-        animal.setPhylum(phylumRepository.getPhylumByType(addAnimalDTO.getPhylumType()));
-        animal.setAnimalClass(animalClassRepository.getAnimalClassByAnimalClass(addAnimalDTO.getAnimalClass()));
-        animal.setConservation(conservationStatusRepository.getConservationStatusByStatus(addAnimalDTO.getConservationStatus()));
-        animal.setLocations(locationRepository.getAllByContinentIn(addAnimalDTO.getLocations()));
-        animal.setDiet(dietRepository.getByType(addAnimalDTO.getDietType()));
+        setValues(addAnimalDTO, animal);
         animal.setCreated(LocalDateTime.now());
         animal.setAddedBy(userRepository.findByUsername(username).orElse(null));
 
@@ -108,5 +101,45 @@ public class AnimalService {
 
     public Set<Animal> allAnimalsByUser(String username) {
         return animalRepository.findAllByAddedByUsername(username);
+    }
+
+    public void editAnimal(EditAnimalDTO editAnimalDTO) {
+        Animal animal = animalRepository.findBySpecieName(editAnimalDTO.getSpecieName()).orElse(null);
+        setValues(editAnimalDTO, animal);
+        animal.setGenus(editAnimalDTO.getGenus());
+        animal.setScientificName(editAnimalDTO.getScientificName());
+        animal.setHabitat(editAnimalDTO.getHabitat());
+        animal.setLifespan(editAnimalDTO.getLifespan());
+        animal.setDescription(editAnimalDTO.getDescription());
+        animal.setModified(LocalDateTime.now());
+
+        if (editAnimalDTO.getSkinType() != null) {
+            animal.setSkin(skinRepository.getByType(editAnimalDTO.getSkinType()));
+        }
+        animalRepository.save(animal);
+    }
+
+    public void verifyAnimal(String specieName) {
+        Animal animal = animalRepository.findBySpecieName(specieName).orElse(null);
+        animal.setVerified(true);
+        animal.setModified(LocalDateTime.now());
+
+        animalRepository.save(animal);
+    }
+
+    public void unverifyAnimal(String specieName) {
+        Animal animal = animalRepository.findBySpecieName(specieName).orElse(null);
+        animal.setVerified(false);
+        animal.setModified(LocalDateTime.now());
+
+        animalRepository.save(animal);
+    }
+
+    private <T extends AddEditAnimal> void setValues(T addEditAnimalDTO, Animal animal) {
+        animal.setPhylum(phylumRepository.getPhylumByType(addEditAnimalDTO.getPhylumType()));
+        animal.setAnimalClass(animalClassRepository.getAnimalClassByAnimalClass(addEditAnimalDTO.getAnimalClass()));
+        animal.setConservation(conservationStatusRepository.getConservationStatusByStatus(addEditAnimalDTO.getConservationStatus()));
+        animal.setLocations(locationRepository.getAllByContinentIn(addEditAnimalDTO.getLocations()));
+        animal.setDiet(dietRepository.getByType(addEditAnimalDTO.getDietType()));
     }
 }

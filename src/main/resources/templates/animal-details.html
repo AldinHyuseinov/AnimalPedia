@@ -12,7 +12,36 @@
 <div class="container my-5">
     <div class="row">
         <main class="col-lg-9 col-md-12">
-            <h1 class="text-center text-black" th:text="${animal.specieName}"></h1>
+            <h1 class="text-center" th:text="${animal.specieName}"></h1>
+
+            <div class="d-flex">
+                <h5 th:text="'Last modified: ' + (${animal.modified == null} ? 'Not modified' : ${#temporals.format(animal.modified, 'dd-MM-yyyy HH:mm:ss')})"></h5>
+                <th:block th:if="${@userService.userAuthorizationCheck(#authentication.name)}">
+                    <button class="btn btn-primary btn-sm ms-2" type="button" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Modify
+                    </button>
+                </th:block>
+
+            </div>
+
+            <div class="d-flex mb-2">
+                <h5 th:text="'Verified: '"></h5>
+                <th:block th:if="${animal.verified}">
+                    <img class="ms-2" src="/images/checkmark.jpg" width="40" height="30" alt="Checkmark">
+                </th:block>
+                <th:block th:unless="${animal.verified}">
+                    <img class="ms-2" src="/images/x.jpg" width="30" height="30" alt="X mark">
+                </th:block>
+                <th:block sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')">
+                    <th:block th:unless="${animal.verified}">
+                        <button id="verify" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2" type="button">Verify</button>
+                    </th:block>
+                    <th:block th:if="${animal.verified}">
+                        <button id="undo" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2" type="button">Undo Verify</button>
+                    </th:block>
+                </th:block>
+            </div>
+
             <img th:if="${animal.url == null}" src="/images/placeholder.png" alt="Picture"
                  class="card-img rounded w-100 h-25 mb-3">
             <img th:unless="${animal.url == null}" th:src="${animal.url}" alt="Picture"
@@ -184,35 +213,251 @@
         </main>
     </div>
 
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Fun Fact</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="fact" class="col-form-label">Type here:</label>
-                            <textarea class="form-control" id="fact"></textarea>
-                            <p id="fact-error" class="errors alert alert-danger" style="display: none"></p>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button id="addFact" th:value="${animal.specieName}" type="button" class="btn btn-primary">Ok
-                    </button>
+    <th:block sec:authorize="isAuthenticated()">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Fun Fact</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="fact" class="col-form-label">Type here:</label>
+                                <textarea class="form-control" id="fact"></textarea>
+                                <p id="fact-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button id="addFact" th:value="${animal.specieName}" type="button" class="btn btn-primary">Ok
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </th:block>
+
+    <th:block th:if="${@userService.userAuthorizationCheck(#authentication.name)}">
+        <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
+             aria-labelledby="offcanvasWithBothOptionsLabel" style="width: 33%">
+            <div class="offcanvas-header">
+                <h2 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">Edit Animal</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+
+                <form id="animal-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Scientific Classification</h3>
+
+                            <!-- Phylum -->
+                            <div class="form-group">
+                                <label for="phylumType">Phylum</label>
+                                <select th:field="${animal.phylumType}" class="form-control" id="phylumType">
+                                    <!-- Options here -->
+                                    <th:block th:insert="~{fragments/options :: animalPhylumOptions}"></th:block>
+                                </select>
+                                <p id="phylumType-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Class -->
+                            <div class="form-group">
+                                <label for="animalClass">Class</label>
+                                <select th:field="${animal.animalClass}" class="form-control" id="animalClass"
+                                        name="animalClass">
+                                    <!-- Options here -->
+                                    <th:block th:insert="~{fragments/options :: animalClassOptions}"></th:block>
+                                </select>
+                                <p id="animalClass-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Order -->
+                            <div class="form-group">
+                                <label for="animalOrder">Order</label>
+                                <input th:value="${animal.animalOrder}" type="text" class="form-control"
+                                       id="animalOrder" name="animalOrder"/>
+                                <p id="animalOrder-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Family -->
+                            <div class="form-group">
+                                <label for="animalFamily">Family</label>
+                                <input th:value="${animal.animalFamily}" type="text" class="form-control"
+                                       id="animalFamily" name="animalFamily"/>
+                                <p id="animalFamily-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Genus -->
+                            <div class="form-group">
+                                <label for="genus">Genus</label>
+                                <input th:value="${animal.genus}" type="text" class="form-control" id="genus"
+                                       name="genus"/>
+                                <p id="genus-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Specie Name -->
+                            <div class="form-group">
+                                <label for="specieName">Specie Name</label>
+                                <input th:value="${animal.specieName}" type="text" class="form-control" id="specieName"
+                                       name="specieName" disabled readonly/>
+                            </div>
+
+                            <!-- Scientific Name -->
+                            <div class="form-group">
+                                <label for="scientificName">Scientific Name</label>
+                                <input th:value="${animal.scientificName}" type="text" class="form-control"
+                                       id="scientificName" name="scientificName"/>
+                                <p id="scientificName-error" class="errors alert alert-danger"
+                                   style="display: none"></p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h3>Facts and Characteristics</h3>
+
+                            <!-- Conservation Status -->
+                            <div class="form-group">
+                                <label for="conservationStatus">Conservation Status</label>
+                                <select th:field="${animal.conservationStatus}" class="form-control"
+                                        id="conservationStatus">
+                                    <!-- Options here -->
+                                    <th:block th:insert="~{fragments/options :: animalStatusOptions}"></th:block>
+                                </select>
+                                <p id="conservationStatus-error" class="errors alert alert-danger"
+                                   style="display: none"></p>
+                            </div>
+                            <!-- Habitat -->
+                            <div class="form-group">
+                                <label for="habitat">Habitat</label>
+                                <input th:value="${animal.habitat}" type="text" class="form-control" id="habitat"
+                                       name="habitat"/>
+                                <p id="habitat-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Diet Type -->
+                            <div class="form-group">
+                                <label for="dietType">Diet Type</label>
+                                <select th:field="${animal.dietType}" class="form-control" id="dietType">
+                                    <!-- Options here -->
+                                    <th:block th:insert="~{fragments/options :: animalDietOptions}"></th:block>
+                                </select>
+                                <p id="dietType-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Skin Type -->
+                            <div class="form-group">
+                                <label for="skinType">Skin Type</label>
+                                <select th:field="${animal.skinType}" class="form-control" id="skinType"
+                                        name="skinType">
+                                    <!-- Options here -->
+                                    <th:block th:insert="~{fragments/options :: animalSkinTypeOptions}"></th:block>
+                                </select>
+                                <p id="skinType-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Lifespan -->
+                            <div class="form-group">
+                                <label for="lifespan">Lifespan</label>
+                                <input th:value="${animal.lifespan}" type="number" class="form-control" id="lifespan"
+                                       name="lifespan"/>
+                                <p id="lifespan-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea th:text="${animal.description}" class="form-control" id="description"
+                                          name="description" style="height:103px;"></textarea>
+                                <p id="description-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+
+                            <!-- Locations -->
+                            <div class="form-group mb-3">
+                                <label>Location</label>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).ASIA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]" value="ASIA"
+                                           id="asia">
+                                    <label class="form-check-label" for="asia">
+                                        Asia
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).AFRICA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]" value="AFRICA"
+                                           id="africa">
+                                    <label class="form-check-label" for="africa">
+                                        Africa
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).NORTH_AMERICA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]"
+                                           value="NORTH_AMERICA"
+                                           id="north-america">
+                                    <label class="form-check-label" for="north-america">
+                                        North America
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).SOUTH_AMERICA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]"
+                                           value="SOUTH_AMERICA"
+                                           id="south-america">
+                                    <label class="form-check-label" for="south-america">
+                                        South America
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).ANTARCTICA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]"
+                                           value="ANTARCTICA"
+                                           id="antarctica">
+                                    <label class="form-check-label" for="antarctica">
+                                        Antarctica
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).EUROPE)}"
+                                           class="form-check-input" type="checkbox" name="continent[]" value="EUROPE"
+                                           id="europe">
+                                    <label class="form-check-label" for="europe">
+                                        Europe
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).AUSTRALIA)}"
+                                           class="form-check-input" type="checkbox" name="continent[]" value="AUSTRALIA"
+                                           id="australia">
+                                    <label class="form-check-label" for="australia">
+                                        Australia
+                                    </label>
+                                </div>
+                                <p id="locations-error" class="errors alert alert-danger" style="display: none"></p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary">Submit</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </th:block>
 
 </div>
 <script src="/js/addFact.js"></script>
 <script src="/js/getRandomFunFact.js"></script>
+<script src="/js/editAnimal.js"></script>
+<script src="/js/getAnimalData.js"></script>
 <script src="/js/manageResponse.js"></script>
+<script src="/js/verifyAnimal.js"></script>
+<script src="/js/unverifyAnimal.js"></script>
 
 <div th:replace="~{fragments/footer}">Footer</div>
 
