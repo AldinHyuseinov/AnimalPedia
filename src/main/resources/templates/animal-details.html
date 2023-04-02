@@ -37,7 +37,7 @@
                         <button id="verify" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2" type="button">Verify</button>
                     </th:block>
                     <th:block th:if="${animal.verified}">
-                        <button id="undo" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2" type="button">Undo Verify</button>
+                        <button id="undo" th:value="${animal.specieName}" class="btn btn-danger btn-sm ms-2" type="button">Undo Verify</button>
                     </th:block>
                 </th:block>
             </div>

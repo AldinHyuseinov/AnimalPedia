@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modal</title>
+</head>
+<body>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Ban User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="reason" class="col-form-label">What's the reason?</label>
+            <input class="form-control" id="reason">
+          </div>
+          <div class="mb-3">
+            <label for="time" class="col-form-label">For how long?</label>
+            <select class="form-control" id="time">
+              <!-- Options here -->
+              <th:block th:insert="~{fragments/options :: banTimeOptions}"></th:block>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button id="ban-confirm" type="button" class="btn btn-primary">Ok
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

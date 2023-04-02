@@ -178,6 +178,14 @@ public class UserService {
         userRepository.saveAll(users);
     }
 
+    public UserDTO getUser(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NoSuchElementException("No such user found!"));
+        UserDTO userDTO = mapper.map(user, UserDTO.class);
+        userDTO.setRole(user.getRole().getRole().name());
+
+        return userDTO;
+    }
+
     private void login(Consumer<Authentication> loginProcessor, UserDetails userDetails) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(),
                 userDetails.getAuthorities());

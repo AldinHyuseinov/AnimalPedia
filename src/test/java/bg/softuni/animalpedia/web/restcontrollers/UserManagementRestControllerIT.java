@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class AdminRestControllerIT {
+class UserManagementRestControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
@@ -55,7 +55,7 @@ class AdminRestControllerIT {
     @WithMockUser(roles = {"ADMIN"})
     void testBanningAndUnbanningUser() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        BannedUserDTO bannedUserDTO = new BannedUserDTO("usercheto", "bad user");
+        BannedUserDTO bannedUserDTO = new BannedUserDTO("usercheto", "bad user", "");
 
         mockMvc.perform(post(API_URL + "/ban").contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)

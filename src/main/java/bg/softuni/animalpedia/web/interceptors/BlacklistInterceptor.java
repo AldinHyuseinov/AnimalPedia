@@ -35,7 +35,7 @@ public class BlacklistInterceptor implements HandlerInterceptor {
             String username = authentication.getName();
 
             if (banService.isBanned(username)) {
-                tlvr.addStaticVariable("bannedMessage", "You're account has been banned. Reason: " +
+                tlvr.addStaticVariable("bannedMessage", "You're account has been banned until: " + banService.getBanTime(username) + ". " + "Reason: " +
                         banService.bannedUser(username).getReason());
                 View blockedView = tlvr.resolveViewName("blocked", Locale.getDefault());
 

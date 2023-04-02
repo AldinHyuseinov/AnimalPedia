@@ -13,4 +13,6 @@ public class BannedUserDTO {
     private String userUsername;
 
     private String reason;
+
+    private String banTime;
 }

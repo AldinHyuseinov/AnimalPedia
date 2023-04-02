@@ -32,8 +32,17 @@
                                 <div class="card-text">
                                     <p th:text="${#strings.length(a.description) > 300} ? ${#strings.substring(a.description, 0, 300) + '...'} : ${a.description}"></p>
                                     <a class="small" th:href="${a.detailsLink}">Read More</a>
-                                    <p class="text-muted small"
-                                       th:text="'By ' + ${a.addedByUsername} + ' ' + ${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></p>
+                                    <p th:if="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, a.addedByUsername)}"
+                                       class="text-muted small mt-1">
+                                        By <a th:href="@{/users/profile}" th:text="${a.addedByUsername}"></a>
+                                        <span th:text="${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></span>
+                                    </p>
+                                    <p th:unless="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, a.addedByUsername)}"
+                                       class="text-muted small mt-1">
+                                        By <a th:href="@{/users/profile/{username}(username=${a.addedByUsername})}"
+                                              th:text="${a.addedByUsername}"></a>
+                                        <span th:text="${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></span>
+                                    </p>
                                 </div>
                                 <th:block th:if="${@userService.userAuthorizationCheck(a.addedByUsername)}">
                                     <button id="delete-animal" th:value="${a.deleteLink}"

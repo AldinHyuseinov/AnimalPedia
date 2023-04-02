@@ -21,9 +21,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api/user-management")
 @AllArgsConstructor(onConstructor_ = @Autowired)
-public class AdminRestController {
+public class UserManagementRestController {
     private final UserService userService;
 
     private final BanService banService;
@@ -55,7 +55,7 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     @PostMapping("/ban")
     public ResponseEntity<?> banUser(@RequestBody BannedUserDTO bannedUserDTO) {
 
@@ -67,7 +67,7 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
     @DeleteMapping("/unban/{username}")
     public ResponseEntity<?> unbanUser(@PathVariable String username) {
         banService.unbanUser(username);
@@ -75,14 +75,22 @@ public class AdminRestController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<EntityModel<UserDTO>> userByUsername(@PathVariable String username) {
+        UserDTO userDTO = userService.getUser(username);
+        userDTO.setBanned(banService.isBanned(userDTO.getUsername()));
+
+        return ResponseEntity.ok(EntityModel.of(userDTO, getUserLinks(userDTO)));
+    }
+
     private Link[] getUserLinks(UserDTO userDTO) {
         List<Link> userLinks = new ArrayList<>();
 
-        Link promote = linkTo(methodOn(AdminRestController.class).promoteUser(userDTO.getUsername())).withRel("promote");
-        Link demote = linkTo(methodOn(AdminRestController.class).demoteUser(userDTO.getUsername())).withRel("demote");
+        Link promote = linkTo(methodOn(UserManagementRestController.class).promoteUser(userDTO.getUsername())).withRel("promote");
+        Link demote = linkTo(methodOn(UserManagementRestController.class).demoteUser(userDTO.getUsername())).withRel("demote");
 
         if (banService.isBanned(userDTO.getUsername())) {
-            Link unban = linkTo(methodOn(AdminRestController.class).unbanUser(userDTO.getUsername())).withRel("unban");
+            Link unban = linkTo(methodOn(UserManagementRestController.class).unbanUser(userDTO.getUsername())).withRel("unban");
             userLinks.add(unban);
         }
 

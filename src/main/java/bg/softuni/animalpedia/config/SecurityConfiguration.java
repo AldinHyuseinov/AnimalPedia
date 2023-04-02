@@ -25,8 +25,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/", "/auth/**", "/api/users/register", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
-                        "/animals/{specie-name}", "/api/admin/**", "/api/fun-fact/{specie-name}").permitAll()
+                .requestMatchers("/error", "/", "/auth/**", "/api/users/register", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
+                        "/animals/{specie-name}", "/api/user-management/**", "/api/fun-fact/{specie-name}", "/users/profile/{username}").permitAll()
                 .requestMatchers("/users/all").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/animals/verify/{specie-name}", "/api/animals/unverify/{specie-name}")
                 .hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())

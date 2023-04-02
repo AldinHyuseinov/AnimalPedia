@@ -46,7 +46,9 @@
                 </td>
 
                 <td th:unless="${u.banned}">
-                    <button id="ban-link" class="btn btn-danger" th:value="${u.username}">Ban
+                    <button id="ban-link" th:value="${u.username}" type="button" class="btn btn-danger"
+                            data-bs-toggle="modal" data-bs-target="#exampleModal" th:data-bs-whatever="${u.username}">
+                        Ban
                     </button>
                 </td>
 
@@ -67,6 +69,8 @@
             </tr>
         </table>
     </div>
+
+    <div th:replace="~{fragments/ban-modal}"></div>
 
 </div>
 <div th:replace="~{fragments/footer}">Footer</div>

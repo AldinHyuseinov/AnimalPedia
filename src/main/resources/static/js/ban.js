@@ -1,12 +1,20 @@
-const banLinks = document.querySelectorAll('#ban-link')
+const exampleModal = document.getElementById('exampleModal')
 
-for (let banLink of banLinks) {
-    banLink.addEventListener('click', function (event) {
-        let banReason = prompt("What's the reasoning?");
+exampleModal.addEventListener('show.bs.modal', event => {
+    // Button that triggered the modal
+    const button = event.relatedTarget
+    // Extract info from data-bs-* attributes
+    const user = button.getAttribute('data-bs-whatever')
+    // Update the modal's content.
+    const modalTitle = exampleModal.querySelector('.modal-title')
 
+    modalTitle.textContent = `Ban User: ${user}`
+
+    document.getElementById('ban-confirm').addEventListener('click', () => {
         const data = {
-            userUsername: event.target.value,
-            reason: banReason
+            userUsername: user,
+            reason: document.getElementById('reason').value.trim(),
+            banTime: document.getElementById('time').value.trim()
         }
 
         const requestOptions = {
@@ -17,7 +25,7 @@ for (let banLink of banLinks) {
             body: JSON.stringify(data)
         }
 
-        fetch("http://localhost:8000/api/admin/ban", requestOptions)
+        fetch("http://localhost:8000/api/user-management/ban", requestOptions)
             .then(() => location.reload())
     })
-}
+})

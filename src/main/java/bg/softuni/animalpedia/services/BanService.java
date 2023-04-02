@@ -7,8 +7,12 @@ import bg.softuni.animalpedia.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -28,6 +32,9 @@ public class BanService {
         BannedUser bannedUser = mapper.map(bannedUserDTO, BannedUser.class);
         bannedUser.setUser(userRepository.findByUsername(bannedUserDTO.getUserUsername()).orElse(null));
 
+        if (!bannedUserDTO.getBanTime().isBlank()) {
+            bannedUser.setBannedUntil(LocalDateTime.now().plusDays(Long.parseLong(bannedUserDTO.getBanTime())));
+        }
         bannedUserRepository.save(bannedUser);
     }
 
@@ -41,5 +48,17 @@ public class BanService {
 
     public BannedUserDTO bannedUser(String username) {
         return mapper.map(bannedUserRepository.findByUserUsername(username).get(), BannedUserDTO.class);
+    }
+
+    public String getBanTime(String username) {
+        return bannedUserRepository.findByUserUsername(username).get().getBannedUntil().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    }
+
+    @Scheduled(fixedRate = 7200000) // Runs every 2 hours
+    public void banExpirationCheckAndRemove() {
+        List<BannedUser> bannedUsers = bannedUserRepository.getAllByBannedUntilNotNull();
+        bannedUsers.removeIf(bannedUser -> bannedUser.getBannedUntil().isAfter(LocalDateTime.now()));
+
+        bannedUserRepository.saveAll(bannedUsers);
     }
 }

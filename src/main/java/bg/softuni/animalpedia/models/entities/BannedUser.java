@@ -1,12 +1,13 @@
 package bg.softuni.animalpedia.models.entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "banned_users")
@@ -18,4 +19,6 @@ public class BannedUser extends BaseEntity {
     private User user;
 
     private String reason;
+
+    private LocalDateTime bannedUntil;
 }
