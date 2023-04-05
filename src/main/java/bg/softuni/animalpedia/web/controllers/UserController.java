@@ -2,7 +2,6 @@ package bg.softuni.animalpedia.web.controllers;
 
 import bg.softuni.animalpedia.models.dto.UserDTO;
 import bg.softuni.animalpedia.models.dto.UserLinksDTO;
-import bg.softuni.animalpedia.repositories.UserRepository;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;

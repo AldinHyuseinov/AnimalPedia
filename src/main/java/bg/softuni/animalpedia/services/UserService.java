@@ -1,9 +1,6 @@
 package bg.softuni.animalpedia.services;
 
-import bg.softuni.animalpedia.models.dto.EditUserDTO;
-import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
-import bg.softuni.animalpedia.models.dto.ResetPasswordDTO;
-import bg.softuni.animalpedia.models.dto.UserDTO;
+import bg.softuni.animalpedia.models.dto.*;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.User;
 import bg.softuni.animalpedia.models.enums.Role;
@@ -59,7 +56,7 @@ public class UserService {
     }
 
     public void editUser(EditUserDTO editUserDTO, String username, Consumer<Authentication> loginProcessor) {
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NoSuchElementException("No such user found!"));
 
         if (!editUserDTO.getImageUrl().equals("")) {
             user.setImageUrl(editUserDTO.getImageUrl());
@@ -93,7 +90,7 @@ public class UserService {
     }
 
     public void promoteUser(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NoSuchElementException("No such user found!"));
 
         if (user.getRole().getRole().compareTo(Role.USER) == 0) {
             user.setRole(userRoleRepository.findByRole(Role.MODERATOR));
@@ -105,7 +102,7 @@ public class UserService {
     }
 
     public void demoteUser(String username) {
-        User user = userRepository.findByUsername(username).orElse(null);
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new NoSuchElementException("No such user found!"));
 
         if (user.getRole().getRole().compareTo(Role.MODERATOR) == 0) {
             user.setRole(userRoleRepository.findByRole(Role.USER));
@@ -116,18 +113,25 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public static boolean userAuthorizationCheck(String username) {
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        Authentication authentication = securityContext.getAuthentication();
+    public boolean userAuthorizationCheck(Authentication authentication, String specieName) {
 
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return false;
         }
-        return authentication.getName().equals(username) ||
-                authentication.getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ROLE_ADMIN")) ||
-                authentication.getAuthorities()
-                        .contains(new SimpleGrantedAuthority("ROLE_MODERATOR"));
+
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            return true;
+        }
+
+        AnimalDetailsDTO animal = animalService.animalByName(specieName);
+        User user = userRepository.findByUsername(animal.getAddedByUsername()).get();
+
+        if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MODERATOR")) &&
+                !user.getRole().getRole().name().equals("ADMIN") &&
+                !user.getRole().getRole().name().equals("MODERATOR")) {
+            return true;
+        }
+        return authentication.getName().equals(animal.getAddedByUsername());
     }
 
     public void deleteUser(String username) {

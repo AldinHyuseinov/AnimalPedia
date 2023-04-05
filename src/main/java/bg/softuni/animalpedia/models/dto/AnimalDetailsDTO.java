@@ -12,6 +12,8 @@ import java.util.Set;
 @Getter
 @Setter
 public class AnimalDetailsDTO {
+    private String addedByUsername;
+
     private String url;
 
     private String specieName;

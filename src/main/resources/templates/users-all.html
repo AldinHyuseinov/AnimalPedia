@@ -31,7 +31,7 @@
                 <td th:text="${u.username}"></td>
                 <td th:text="${u.firstName} + ' ' + ${u.lastName}"></td>
                 <td th:text="${u.email}"></td>
-                <td th:text="${u.role}"></td>
+                <td th:text="${#strings.capitalizeWords(#strings.toLowerCase(u.role))}"></td>
                 <td th:text="${#temporals.format(u.created, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td th:text="${u.modified == null} ? 'Not modified' : ${#temporals.format(u.modified, 'dd-MM-yyyy HH:mm:ss')}"></td>
                 <td>

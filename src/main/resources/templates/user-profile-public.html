@@ -25,7 +25,9 @@
                 </div>
 
                 <div class="text-center mt-3">
-                    <h5 class="mt-4 mb-0">Full name</h5>
+                    <h5 class="mt-4 mb-0">Role</h5>
+                    <span th:text="${#strings.capitalizeWords(#strings.toLowerCase(user.role))}"></span>
+                    <h5 class="mt-2 mb-0">Full name</h5>
                     <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span>
                     <h5 class="mt-2 mb-0">Username</h5>
                     <span th:text="${user.username}"></span>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Animals</title>
+</head>
+<body>
+
+<div th:each="a : ${animals}" class="card animal-card">
+  <div class="card-body">
+    <a class="link-dark" th:href="${a.detailsLink}">
+      <h3 class="card-title text-start text-black col-12 mx-5" th:text="${a.specieName}"></h3>
+    </a>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-4 col-md-12 text-center">
+          <img th:if="${a.url == null}" src="/images/placeholder.png" alt="Animal Picture"
+               class="card-img w-75 h-auto">
+          <img th:unless="${a.url == null}" th:src="${a.url}" alt="Animal Picture"
+               class="card-img w-75 h-100">
+        </div>
+        <div class="col">
+          <div class="card-text">
+            <p th:text="${#strings.length(a.description) > 300} ? ${#strings.substring(a.description, 0, 300) + '...'} : ${a.description}"></p>
+            <a class="small" th:href="${a.detailsLink}">Read More</a>
+            <p th:if="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, a.addedByUsername)}"
+               class="text-muted small mt-1">
+              By <a th:href="@{/users/profile}" th:text="${a.addedByUsername}"></a>
+              <span th:text="${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></span>
+            </p>
+            <p th:unless="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, a.addedByUsername)}"
+               class="text-muted small mt-1">
+              By <a th:href="@{/users/profile/{username}(username=${a.addedByUsername})}"
+                    th:text="${a.addedByUsername}"></a>
+              <span th:text="${#temporals.format(a.created, 'dd-MM-yyyy HH:mm:ss')}"></span>
+            </p>
+          </div>
+          <th:block th:if="${@userService.userAuthorizationCheck(#authentication, a.specieName)}">
+            <button id="delete-animal" th:value="${a.deleteLink}"
+                    class="btn btn-danger btn-sm">Delete
+            </button>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

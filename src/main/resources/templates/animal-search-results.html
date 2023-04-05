@@ -5,17 +5,14 @@
 <head th:replace="~{fragments/head}"></head>
 
 <body>
-
 <div th:replace="~{fragments/navbar}">Navbar</div>
 
 <div class="container my-5">
-
     <div class="row">
         <main class="col-lg-9 col-md-12">
-            <h2 class="text-start text-black">All Animals</h2>
-            <p class="text-start text-black">You will find all the so far added animals below.</p>
+            <h2 class="text-start text-black" th:text="'Search Results For ' + ${searchTerm} + ':'"></h2>
             <th:block th:if="${noAnimals}">
-                <h2 class="text-start text-black">No Animals Found!</h2>
+                <h3 class="text-start text-black">No Animals That Match Your Search Was Found!</h3>
             </th:block>
             <th:block th:unless="${noAnimals}">
                 <div th:replace="~{fragments/animals-page}"></div>
@@ -24,27 +21,27 @@
                     <ul class="pagination">
                         <li class="page-item" th:classappend="${animals.isFirst() ? 'disabled' : ''}">
                             <a th:unless="${animals.isFirst()}" class="page-link"
-                               th:href="@{/animals/all(size=${animals.getSize()}, page=${0})}">First</a>
+                               th:href="@{/animals/search(search=${searchTerm}, size=${animals.getSize()}, page=${0})}">First</a>
                             <a th:if="${animals.isFirst()}" class="page-link disabled" href="#">First</a>
                         </li>
                         <li class="page-item" th:classappend="${!animals.hasPrevious() ? 'disabled' : ''}">
                             <a th:unless="${!animals.hasPrevious()}" class="page-link"
-                               th:href="@{/animals/all(size=${animals.getSize()}, page=${animals.previousPageable().pageNumber})}">Previous</a>
+                               th:href="@{/animals/search(search=${searchTerm}, size=${animals.getSize()}, page=${animals.previousPageable().pageNumber})}">Previous</a>
                             <a th:if="${!animals.hasPrevious()}" class="page-link disabled" href="#">Previous</a>
                         </li>
                         <li class="page-item" th:each="page : ${#numbers.sequence(0, animals.totalPages - 1)}"
                             th:classappend="${animals.number == page ? 'active' : ''}">
-                            <a class="page-link" th:href="@{/animals/all(size=${animals.getSize()}, page=${page})}"
+                            <a class="page-link" th:href="@{/animals/search(search=${searchTerm}, size=${animals.getSize()}, page=${page})}"
                                th:text="${page + 1}"></a>
                         </li>
                         <li class="page-item" th:classappend="${!animals.hasNext() ? 'disabled' : ''}">
                             <a th:unless="${!animals.hasNext()}" class="page-link"
-                               th:href="@{/animals/all(size=${animals.getSize()}, page=${animals.nextPageable().pageNumber})}">Next</a>
+                               th:href="@{/animals/search(search=${searchTerm}, size=${animals.getSize()}, page=${animals.nextPageable().pageNumber})}">Next</a>
                             <a th:if="${!animals.hasNext()}" class="page-link disabled" href="#">Next</a>
                         </li>
                         <li class="page-item" th:classappend="${animals.isLast() ? 'disabled' : ''}">
                             <a th:unless="${animals.isLast()}" class="page-link"
-                               th:href="@{/animals/all(size=${animals.getSize()}, page=${animals.getTotalPages() - 1})}">Last</a>
+                               th:href="@{/animals/search(search=${searchTerm}, size=${animals.getSize()}, page=${animals.getTotalPages() - 1})}">Last</a>
                             <a th:if="${animals.isLast()}" class="page-link disabled" href="#">Last</a>
                         </li>
                     </ul>
@@ -52,9 +49,7 @@
             </th:block>
         </main>
     </div>
-
 </div>
-<script src="/js/deleteAnimal.js"></script>
 
 <div th:replace="~{fragments/footer}">Footer</div>
 

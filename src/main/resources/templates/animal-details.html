@@ -16,7 +16,7 @@
 
             <div class="d-flex">
                 <h5 th:text="'Last modified: ' + (${animal.modified == null} ? 'Not modified' : ${#temporals.format(animal.modified, 'dd-MM-yyyy HH:mm:ss')})"></h5>
-                <th:block th:if="${@userService.userAuthorizationCheck(#authentication.name)}">
+                <th:block th:if="${@userService.userAuthorizationCheck(#authentication, animal.specieName)}">
                     <button class="btn btn-primary btn-sm ms-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Modify
                     </button>
@@ -34,10 +34,14 @@
                 </th:block>
                 <th:block sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')">
                     <th:block th:unless="${animal.verified}">
-                        <button id="verify" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2" type="button">Verify</button>
+                        <button id="verify" th:value="${animal.specieName}" class="btn btn-primary btn-sm ms-2"
+                                type="button">Verify
+                        </button>
                     </th:block>
                     <th:block th:if="${animal.verified}">
-                        <button id="undo" th:value="${animal.specieName}" class="btn btn-danger btn-sm ms-2" type="button">Undo Verify</button>
+                        <button id="undo" th:value="${animal.specieName}" class="btn btn-danger btn-sm ms-2"
+                                type="button">Undo Verify
+                        </button>
                     </th:block>
                 </th:block>
             </div>
@@ -194,7 +198,13 @@
                             <img th:src="${p.url}" class="d-block w-100" alt="Slide 2" style="height: 500px;">
                             <div class="carousel-caption d-none d-md-block">
                                 <h5 th:text="${p.title}"></h5>
-                                <p th:text="${p.authorUsername}"></p>
+                                <p th:if="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, p.authorUsername)}">
+                                    <a class="link-dark" th:href="@{/users/profile}" th:text="${p.authorUsername}"></a>
+                                </p>
+                                <p th:unless="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, p.authorUsername)}">
+                                    <a class="link-dark" th:href="@{/users/profile/{username}(username=${p.authorUsername})}"
+                                       th:text="${p.authorUsername}"></a>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -240,7 +250,7 @@
         </div>
     </th:block>
 
-    <th:block th:if="${@userService.userAuthorizationCheck(#authentication.name)}">
+    <th:block th:if="${@userService.userAuthorizationCheck(#authentication, animal.specieName)}">
         <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
              aria-labelledby="offcanvasWithBothOptionsLabel" style="width: 33%">
             <div class="offcanvas-header">

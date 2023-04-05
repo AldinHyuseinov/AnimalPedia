@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static bg.softuni.animalpedia.services.UserService.userAuthorizationCheck;
-
 @Service
 @AllArgsConstructor(onConstructor_ = @Autowired)
 public class AnimalService {
@@ -86,10 +84,6 @@ public class AnimalService {
         }
         Animal animal = animalOpt.get();
 
-        if (!userAuthorizationCheck(animal.getAddedBy().getUsername())) {
-            throw new UnsupportedOperationException("Not allowed to delete!");
-        }
-
         Set<Location> locations = animal.getLocations();
         locations.clear();
         animal.setAddedBy(null);
@@ -104,7 +98,8 @@ public class AnimalService {
     }
 
     public void editAnimal(EditAnimalDTO editAnimalDTO) {
-        Animal animal = animalRepository.findBySpecieName(editAnimalDTO.getSpecieName()).orElse(null);
+        Animal animal = animalRepository.findBySpecieName(editAnimalDTO.getSpecieName()).orElseThrow(() -> new NoSuchElementException("No such animal found!"));
+
         setValues(editAnimalDTO, animal);
         animal.setGenus(editAnimalDTO.getGenus());
         animal.setScientificName(editAnimalDTO.getScientificName());
@@ -120,7 +115,7 @@ public class AnimalService {
     }
 
     public void verifyAnimal(String specieName) {
-        Animal animal = animalRepository.findBySpecieName(specieName).orElse(null);
+        Animal animal = animalRepository.findBySpecieName(specieName).orElseThrow(() -> new NoSuchElementException("No such animal found!"));
         animal.setVerified(true);
         animal.setModified(LocalDateTime.now());
 
@@ -128,11 +123,16 @@ public class AnimalService {
     }
 
     public void unverifyAnimal(String specieName) {
-        Animal animal = animalRepository.findBySpecieName(specieName).orElse(null);
+        Animal animal = animalRepository.findBySpecieName(specieName).orElseThrow(() -> new NoSuchElementException("No such animal found!"));
         animal.setVerified(false);
         animal.setModified(LocalDateTime.now());
 
         animalRepository.save(animal);
+    }
+
+    public List<AnimalDTO> searchAnimals(String searchTerm) {
+        AnimalSpecification spec = new AnimalSpecification(searchTerm);
+        return animalRepository.findAll(spec).stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
     }
 
     private <T extends AddEditAnimal> void setValues(T addEditAnimalDTO, Animal animal) {
