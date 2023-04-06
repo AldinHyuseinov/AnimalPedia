@@ -41,7 +41,7 @@ public abstract class AddEditAnimal {
     @NotNull(message = "Select the animal conservation status!")
     private Status conservationStatus;
 
-    @Size(min = 3, max = 40, message = "Habitat should be between 3 and 40 symbols!")
+    @Size(min = 3, max = 100, message = "Habitat should be between 3 and 100 symbols!")
     private String habitat;
 
     @NotNull(message = "Select animal diet!")

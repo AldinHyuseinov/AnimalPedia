@@ -25,15 +25,16 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                .requestMatchers("/error", "/", "/auth/**", "/api/users/register", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
+                .requestMatchers("/error", "/about", "/", "/auth/**", "/api/users/register", "/animals/all", "/api/animals/all", "/api/animals/{specie-name}",
                         "/api/animals/search/{search-term}", "/animals/search",
-                        "/animals/{specie-name}", "/api/user-management/**", "/api/fun-fact/{specie-name}", "/users/profile/{username}").permitAll()
+                        "/animals/{specie-name}", "/api/user-management/**", "/api/fun-fact/{specie-name}",
+                        "/users/profile/{username}", "/api/animals/class/{animal-class}", "/animals/class/{animal-class}").permitAll()
                 .requestMatchers("/users/all").hasRole(Role.ADMIN.name())
                 .requestMatchers("/api/animals/verify/{specie-name}", "/api/animals/unverify/{specie-name}").hasAnyRole(Role.ADMIN.name(), Role.MODERATOR.name())
                 .requestMatchers("/api/users/delete").hasAnyRole(Role.USER.name(), Role.MODERATOR.name())
                 .requestMatchers("/api/users/edit", "/users/edit", "/animals/add", "/api/animals/add",
                         "/api/animals/delete/{specie-name}", "/api/animals/edit", "/users/profile",
-                        "/api/fun-fact/add", "/pictures/upload/{specie-name}").authenticated()
+                        "/api/fun-fact/add", "/pictures/**").authenticated()
                 .anyRequest().denyAll().and().formLogin().loginPage("/auth/login")
                 .usernameParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY)
                 .passwordParameter(UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY)

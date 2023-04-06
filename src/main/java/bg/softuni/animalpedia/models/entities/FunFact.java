@@ -19,4 +19,7 @@ public class FunFact extends BaseEntity {
 
     @ManyToOne(optional = false)
     private Animal forAnimal;
+
+    @ManyToOne
+    private User fromUser;
 }

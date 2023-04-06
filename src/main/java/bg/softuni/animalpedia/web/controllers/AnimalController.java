@@ -3,6 +3,8 @@ package bg.softuni.animalpedia.web.controllers;
 import bg.softuni.animalpedia.models.dto.AddPictureDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
+import bg.softuni.animalpedia.models.enums.Class;
+import bg.softuni.animalpedia.repositories.AnimalClassRepository;
 import bg.softuni.animalpedia.services.PictureService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
@@ -30,11 +32,14 @@ public class AnimalController {
 
     private final PictureService pictureService;
 
+    private final AnimalClassRepository animalClassRepository;
+
     private static final String API_URL = "http://localhost:8000/api/animals/";
 
-    public AnimalController(RestTemplate restTemplate, PictureService pictureService) {
+    public AnimalController(RestTemplate restTemplate, PictureService pictureService, AnimalClassRepository animalClassRepository) {
         this.restTemplate = restTemplate;
         this.pictureService = pictureService;
+        this.animalClassRepository = animalClassRepository;
     }
 
     @GetMapping("/add")
@@ -85,6 +90,25 @@ public class AnimalController {
 
         model.addAttribute("searchTerm", search);
         return "animal-search-results";
+    }
+
+    @GetMapping("/class/{animal-class}")
+    public String animalsByClass(@PathVariable("animal-class") String animalClass, Model model, @PageableDefault(size = 5) Pageable pageable) {
+        ResponseEntity<CollectionModel<EntityModel<AnimalDTO>>> response = restTemplate.exchange(API_URL + "class/" + animalClass,
+                HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+                });
+        process(model, pageable, response);
+        model.addAttribute("class", animalClass);
+
+        if (animalClass.equals("fish")) {
+            model.addAttribute("isFish", true);
+            model.addAttribute("jawlessFishDescription", animalClassRepository.getAnimalClassByAnimalClass(Class.JAWLESS_FISH).getDescription());
+            model.addAttribute("bonyFishDescription", animalClassRepository.getAnimalClassByAnimalClass(Class.BONY_FISH).getDescription());
+            model.addAttribute("cartilaginousFishDescription", animalClassRepository.getAnimalClassByAnimalClass(Class.CARTILAGINOUS_FISH).getDescription());
+        } else {
+            model.addAttribute("description", animalClassRepository.getAnimalClassByAnimalClass(Class.valueOf(animalClass)).getDescription());
+        }
+        return "animal-classes";
     }
 
     private void process(Model model, Pageable pageable, ResponseEntity<CollectionModel<EntityModel<AnimalDTO>>> response) {

@@ -3,11 +3,13 @@ package bg.softuni.animalpedia.services;
 import bg.softuni.animalpedia.models.dto.*;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.Location;
+import bg.softuni.animalpedia.models.enums.Class;
 import bg.softuni.animalpedia.repositories.*;
 import lombok.AllArgsConstructor;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,7 +55,7 @@ public class AnimalService {
     }
 
     public List<AnimalDTO> allAnimals() {
-        return animalRepository.findAll().stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
+        return animalRepository.findAll(Sort.by("specieName")).stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
     }
 
     public AnimalDetailsDTO animalByName(String specieName) {
@@ -133,6 +135,14 @@ public class AnimalService {
     public List<AnimalDTO> searchAnimals(String searchTerm) {
         AnimalSpecification spec = new AnimalSpecification(searchTerm);
         return animalRepository.findAll(spec).stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
+    }
+
+    public List<AnimalDTO> getAnimalsByClass(Class animalClass) {
+        return animalRepository.findAllByClass(animalClass).stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
+    }
+
+    public List<AnimalDTO> getAllFish() {
+        return animalRepository.findAllFish().stream().map(animal -> mapper.map(animal, AnimalDTO.class)).collect(Collectors.toList());
     }
 
     private <T extends AddEditAnimal> void setValues(T addEditAnimalDTO, Animal animal) {

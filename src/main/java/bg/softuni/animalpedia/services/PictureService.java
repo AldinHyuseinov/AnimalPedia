@@ -54,4 +54,8 @@ public class PictureService {
         return pictureRepository.findAllByAnimalSpecieName(specieName).stream()
                 .map(picture -> mapper.map(picture, PictureDTO.class)).collect(Collectors.toList());
     }
+
+    public void deletePicture(String specieName) {
+        pictureRepository.deleteByAnimalSpecieName(specieName);
+    }
 }

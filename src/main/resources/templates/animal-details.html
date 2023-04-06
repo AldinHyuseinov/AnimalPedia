@@ -16,7 +16,7 @@
 
             <div class="d-flex">
                 <h5 th:text="'Last modified: ' + (${animal.modified == null} ? 'Not modified' : ${#temporals.format(animal.modified, 'dd-MM-yyyy HH:mm:ss')})"></h5>
-                <th:block th:if="${@userService.userAuthorizationCheck(#authentication, animal.specieName)}">
+                <th:block th:if="${@userService.userAuthorizationCheck(animal.specieName)}">
                     <button class="btn btn-primary btn-sm ms-2" type="button" data-bs-toggle="offcanvas"
                             data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">Modify
                     </button>
@@ -47,9 +47,9 @@
             </div>
 
             <img th:if="${animal.url == null}" src="/images/placeholder.png" alt="Picture"
-                 class="card-img rounded w-100 h-25 mb-3">
+                 class="card-img rounded w-100 h-20 mb-3">
             <img th:unless="${animal.url == null}" th:src="${animal.url}" alt="Picture"
-                 class="card-img rounded w-100 h-25 mb-3">
+                 class="card-img rounded w-100 h-20 mb-3">
             <div class="card animal-card">
                 <div class="row">
                     <div class="col-lg-6">
@@ -202,9 +202,16 @@
                                     <a class="link-dark" th:href="@{/users/profile}" th:text="${p.authorUsername}"></a>
                                 </p>
                                 <p th:unless="${#authentication.isAuthenticated() and #strings.equals(#authentication.name, p.authorUsername)}">
-                                    <a class="link-dark" th:href="@{/users/profile/{username}(username=${p.authorUsername})}"
+                                    <a class="link-dark"
+                                       th:href="@{/users/profile/{username}(username=${p.authorUsername})}"
                                        th:text="${p.authorUsername}"></a>
                                 </p>
+                                <th:block th:if="${@userService.userAuthorizationCheck(animal.specieName)}">
+                                    <form th:action="@{/pictures/delete/{specie-name}(specie-name=${animal.specieName})}"
+                                          th:method="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </th:block>
                             </div>
                         </div>
                     </div>
@@ -250,7 +257,7 @@
         </div>
     </th:block>
 
-    <th:block th:if="${@userService.userAuthorizationCheck(#authentication, animal.specieName)}">
+    <th:block th:if="${@userService.userAuthorizationCheck(animal.specieName)}">
         <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasWithBothOptions"
              aria-labelledby="offcanvasWithBothOptionsLabel" style="width: 33%">
             <div class="offcanvas-header">
@@ -445,6 +452,14 @@
                                            id="australia">
                                     <label class="form-check-label" for="australia">
                                         Australia
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input th:checked="${#sets.contains(animal.continents, T(bg.softuni.animalpedia.models.enums.Continent).OCEAN)}"
+                                           class="form-check-input" type="checkbox" name="continent[]" value="OCEAN"
+                                           id="ocean">
+                                    <label class="form-check-label" for="ocean">
+                                        Ocean
                                     </label>
                                 </div>
                                 <p id="locations-error" class="errors alert alert-danger" style="display: none"></p>

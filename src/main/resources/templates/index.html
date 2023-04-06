@@ -42,14 +42,16 @@
 
     </section>
 
-    <h2 class="mt-2">The 6 Main Types of Animals</h2>
+    <h2 class="mt-2">The 5 Main Types of Animals</h2>
 
     <div class="row">
         <div class="col-md-4 d-flex flex-wrap align-items-center">
             <img class="w-100 h-100" src="/images/mammals.jpg" alt="Mammals">
         </div>
         <div class="col-md-4">
-            <h3>Mammals</h3>
+            <a class="link-dark" th:href="@{/animals/class/{animal-class}(animal-class=MAMMAL)}">
+                <h3>Mammals</h3>
+            </a>
             <p>The official mammal class is Mammalia. Animals that are considered mammals include warm-blooded
                 vertebrates that have hair or fur and whose babies drink milk. Unlike other animal types like birds
                 and insects, all mammal babies drink milk that comes from their mother’s bodies. This is one of the
@@ -62,7 +64,9 @@
             <img class="w-100 h-100" src="/images/reptiles.jpg" alt="Reptile">
         </div>
         <div class="col-md-4">
-            <h3>Reptiles</h3>
+            <a class="link-dark" th:href="@{/animals/class/{animal-class}(animal-class=REPTILE)}">
+                <h3>Reptiles</h3>
+            </a>
             <p>Lizards, dinosaurs, crocodiles, turtles, and snakes – all belong to that ancient and stout class of
                 animals known as the reptiles. This is a diverse group with more than 10,000 different species and a
                 huge representation in the fossil record. Once the dominant land vertebrates on the planet, reptiles
@@ -75,7 +79,9 @@
             <img class="w-100 h-100" src="/images/fish-2.jpg" alt="Fish">
         </div>
         <div class="col-md-4">
-            <h3>Fish</h3>
+            <a class="link-dark" th:href="@{/animals/class/{animal-class}(animal-class=fish)}">
+                <h3>Fish</h3>
+            </a>
             <p>Fish are aquatic vertebrates. They usually have gills, paired fins, a long body covered with scales, and
                 tend to be cold-blooded. “Fish” is a term used to refer to lampreys, sharks, coelacanths and ray-finned
                 fishes, but is not a taxonomic group, which is a clade or group containing a common ancestor and all its
@@ -88,7 +94,9 @@
             <img class="w-100 h-100" src="/images/bird.jpg" alt="Bird">
         </div>
         <div class="col-md-4">
-            <h3>Birds</h3>
+            <a class="link-dark" th:href="@{/animals/class/{animal-class}(animal-class=BIRD)}">
+                <h3>Birds</h3>
+            </a>
             <p>Birds, members of the class Aves, include more than 10,400 living species. Their feathers distinguish
                 them from all other classes of animal; no other animals on earth have them. If you see an animal with
                 feathers, it’s undoubtedly a bird. Like mammals, birds are warm-blooded vertebrates with four-chambered
@@ -102,25 +110,14 @@
             <img class="w-100 h-100" src="/images/sgreenfrog.jpg" alt="Amphibian">
         </div>
         <div class="col-md-4">
-            <h3>Amphibians</h3>
+            <a class="link-dark" th:href="@{/animals/class/{animal-class}(animal-class=AMPHIBIAN)}">
+                <h3>Amphibians</h3>
+            </a>
             <p>The official class of amphibians is Amphibia. To have the classification of an amphibian, an animal must
                 be a vertebrate, require water to survive, be cold-blooded, and spend time both on land and in water.
                 Though other animals only live on land or in the water, amphibians have the unique ability to thrive
                 equally in both. Amphibians cover over 6,000 different species across the globe, but about 90% are
                 frogs.</p>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-4 d-flex flex-wrap align-items-center">
-            <img class="w-100 h-100" src="/images/invertebrate_bombardier-beetle_600x300.jpg" alt="Invertebrate">
-        </div>
-        <div class="col-md-4">
-            <h3>Invertebrates</h3>
-            <p>The definition of an invertebrate is any animal that does not have a backbone or vertebral column. The
-                most prolific and easily recognizable members of the invertebrate family are insects. It’s estimated
-                that upwards of 30 million individual species of invertebrates may exist accounting for between 90-95
-                percent of all organisms on the planet.</p>
         </div>
     </div>
 </div>

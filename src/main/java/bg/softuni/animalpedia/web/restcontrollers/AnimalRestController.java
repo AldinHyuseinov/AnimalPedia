@@ -6,6 +6,7 @@ import bg.softuni.animalpedia.models.dto.AnimalDTO;
 import bg.softuni.animalpedia.models.dto.AnimalDetailsDTO;
 import bg.softuni.animalpedia.models.dto.EditAnimalDTO;
 import bg.softuni.animalpedia.models.entities.Picture;
+import bg.softuni.animalpedia.models.enums.Class;
 import bg.softuni.animalpedia.services.AnimalService;
 import bg.softuni.animalpedia.services.PictureService;
 import jakarta.validation.Valid;
@@ -73,15 +74,16 @@ public class AnimalRestController {
                 linkTo(methodOn(AnimalRestController.class).animalByName(name)).withSelfRel()));
     }
 
-    @PreAuthorize("@userService.userAuthorizationCheck(#authentication, #name)")
+    @PreAuthorize("@userService.userAuthorizationCheck(#name)")
     @DeleteMapping("/delete/{specie-name}")
     public ResponseEntity<?> deleteAnimal(@PathVariable("specie-name") String name) {
         animalService.deleteAnimal(name);
+        LOGGER.info("Animal deleted: {}", name);
 
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("@userService.userAuthorizationCheck(#authentication, #editAnimalDTO.specieName)")
+    @PreAuthorize("@userService.userAuthorizationCheck(#editAnimalDTO.specieName)")
     @PutMapping("/edit")
     public ResponseEntity<?> editAnimal(@RequestBody @Valid EditAnimalDTO editAnimalDTO, BindingResult bindingResult) {
         hasErrors(bindingResult);
@@ -94,6 +96,7 @@ public class AnimalRestController {
     @PatchMapping("/verify/{specie-name}")
     public ResponseEntity<?> verifyAnimal(@PathVariable("specie-name") String name) {
         animalService.verifyAnimal(name);
+        LOGGER.info("Animal verified: {}", name);
 
         return ResponseEntity.ok().build();
     }
@@ -101,6 +104,7 @@ public class AnimalRestController {
     @PatchMapping("/unverify/{specie-name}")
     public ResponseEntity<?> unverifyAnimal(@PathVariable("specie-name") String name) {
         animalService.unverifyAnimal(name);
+        LOGGER.info("Animal unverified: {}", name);
 
         return ResponseEntity.ok().build();
     }
@@ -108,6 +112,22 @@ public class AnimalRestController {
     @GetMapping("/search/{search-term}")
     public ResponseEntity<CollectionModel<EntityModel<AnimalDTO>>> searchAnimals(@PathVariable("search-term") String search) {
         List<AnimalDTO> animals = animalService.searchAnimals(search);
+
+        CollectionModel<EntityModel<AnimalDTO>> collectionModel = getModels(animals);
+
+        return ResponseEntity.ok(collectionModel);
+    }
+
+    @GetMapping("/class/{animal-class}")
+    public ResponseEntity<CollectionModel<EntityModel<AnimalDTO>>> animalsByClass(@PathVariable("animal-class") String animalClass) {
+        List<AnimalDTO> animals;
+
+        if (animalClass.equals("fish")) {
+            animals = animalService.getAllFish();
+        } else {
+            Class animal = Class.valueOf(animalClass);
+            animals = animalService.getAnimalsByClass(animal);
+        }
 
         CollectionModel<EntityModel<AnimalDTO>> collectionModel = getModels(animals);
 

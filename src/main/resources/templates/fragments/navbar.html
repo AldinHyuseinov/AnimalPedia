@@ -29,12 +29,16 @@
                         Animal Lists
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
+                        <li><a class="dropdown-item"
+                               th:href="@{/animals/class/{animal-class}(animal-class=fish)}">Fish</a></li>
+                        <li><a class="dropdown-item" th:href="@{/animals/class/{animal-class}(animal-class=AMPHIBIAN)}">Amphibians</a>
                         </li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><a class="dropdown-item" th:href="@{/animals/class/{animal-class}(animal-class=REPTILE)}">Reptiles</a>
+                        </li>
+                        <li><a class="dropdown-item"
+                               th:href="@{/animals/class/{animal-class}(animal-class=BIRD)}">Birds</a></li>
+                        <li><a class="dropdown-item" th:href="@{/animals/class/{animal-class}(animal-class=MAMMAL)}">Mammals</a>
+                        </li>
                     </ul>
                 </li>
                 <li sec:authorize="hasRole('ADMIN')" class="nav-item dropdown">
@@ -79,6 +83,7 @@
                 </li>
 
             </ul>
+            <a class="nav-link text-light-emphasis mx-2" href="/about">About</a>
         </div>
     </div>
 </nav>

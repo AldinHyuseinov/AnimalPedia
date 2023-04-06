@@ -22,6 +22,11 @@ public class RestAdvice {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(nse.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> onNotFoundAnimalClass() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No such animal class!");
+    }
+
     @ExceptionHandler(UnsupportedOperationException.class)
     public ResponseEntity<String> onFailedOperations(UnsupportedOperationException ooe) {
         return ResponseEntity.badRequest().body(ooe.getMessage());

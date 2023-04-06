@@ -20,4 +20,8 @@ public interface PictureRepository extends JpaRepository<Picture, Long> {
 
     @Modifying
     void deleteByAnimal(Animal animal);
+
+    @Modifying
+    @Transactional
+    void deleteByAnimalSpecieName(String specieName);
 }

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head}"></head>
+
+<body>
+<div th:replace="~{fragments/navbar}">Navbar</div>
+
+<div class="container my-5">
+    <div class="row">
+        <main class="col-lg-9 col-md-12">
+            <th:block th:if="${isFish}">
+                <h2 class="text-start text-black" th:text="'All Fish: '"></h2>
+                <p class="text-start text-black">Fish consists of the following: </p>
+                <p class="text-start text-black" th:text="'Bony Fish: ' + ${bonyFishDescription}"></p>
+                <p class="text-start text-black" th:text="'Jawless Fish:' + ${jawlessFishDescription}"></p>
+                <p class="text-start text-black" th:text="'Cartilaginous Fish: ' + ${cartilaginousFishDescription}"></p>
+            </th:block>
+            <th:block th:unless="${isFish}">
+                <h2 class="text-start text-black"
+                    th:text="'All ' + ${#strings.capitalizeWords(#strings.toLowerCase(class)) + 's: '}"></h2>
+                <p class="text-start text-black" th:text="${description}"></p>
+            </th:block>
+            <th:block th:if="${noAnimals}">
+                <h3 class="text-start text-black">No Animals For This Class Were Found!</h3>
+            </th:block>
+            <th:block th:unless="${noAnimals}">
+                <div th:replace="~{fragments/animals-page}"></div>
+
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li class="page-item" th:classappend="${animals.isFirst() ? 'disabled' : ''}">
+                            <a th:unless="${animals.isFirst()}" class="page-link"
+                               th:href="@{/animals/class/{animal-class}(animal-class=${class}, size=${animals.getSize()}, page=${0})}">First</a>
+                            <a th:if="${animals.isFirst()}" class="page-link disabled" href="#">First</a>
+                        </li>
+                        <li class="page-item" th:classappend="${!animals.hasPrevious() ? 'disabled' : ''}">
+                            <a th:unless="${!animals.hasPrevious()}" class="page-link"
+                               th:href="@{/animals/class/{animal-class}(animal-class=${class}, size=${animals.getSize()}, page=${animals.previousPageable().pageNumber})}">Previous</a>
+                            <a th:if="${!animals.hasPrevious()}" class="page-link disabled" href="#">Previous</a>
+                        </li>
+                        <li class="page-item" th:each="page : ${#numbers.sequence(0, animals.totalPages - 1)}"
+                            th:classappend="${animals.number == page ? 'active' : ''}">
+                            <a class="page-link" th:href="@{/animals/class/{animal-class}(animal-class=${class}, size=${animals.getSize()}, page=${page})}"
+                               th:text="${page + 1}"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${!animals.hasNext() ? 'disabled' : ''}">
+                            <a th:unless="${!animals.hasNext()}" class="page-link"
+                               th:href="@{/animals/class/{animal-class}(animal-class=${class}, size=${animals.getSize()}, page=${animals.nextPageable().pageNumber})}">Next</a>
+                            <a th:if="${!animals.hasNext()}" class="page-link disabled" href="#">Next</a>
+                        </li>
+                        <li class="page-item" th:classappend="${animals.isLast() ? 'disabled' : ''}">
+                            <a th:unless="${animals.isLast()}" class="page-link"
+                               th:href="@{/animals/class/{animal-class}(animal-class=${class}, size=${animals.getSize()}, page=${animals.getTotalPages() - 1})}">Last</a>
+                            <a th:if="${animals.isLast()}" class="page-link disabled" href="#">Last</a>
+                        </li>
+                    </ul>
+                </nav>
+            </th:block>
+        </main>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}">Footer</div>
+
+</body>
+</html>

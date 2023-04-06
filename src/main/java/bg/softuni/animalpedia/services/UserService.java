@@ -4,6 +4,7 @@ import bg.softuni.animalpedia.models.dto.*;
 import bg.softuni.animalpedia.models.entities.Animal;
 import bg.softuni.animalpedia.models.entities.User;
 import bg.softuni.animalpedia.models.enums.Role;
+import bg.softuni.animalpedia.repositories.FunFactRepository;
 import bg.softuni.animalpedia.repositories.UserRepository;
 import bg.softuni.animalpedia.repositories.UserRoleRepository;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public class UserService {
     private final AnimalService animalService;
 
     private final BanService banService;
+
+    private final FunFactRepository funFactRepository;
 
     private final ModelMapper mapper;
 
@@ -113,7 +116,9 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public boolean userAuthorizationCheck(Authentication authentication, String specieName) {
+    public boolean userAuthorizationCheck(String specieName) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
 
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return false;
@@ -137,6 +142,7 @@ public class UserService {
     public void deleteUser(String username) {
         Set<Animal> animals = animalService.allAnimalsByUser(username);
         animals.forEach(animal -> animalService.deleteAnimal(animal.getSpecieName()));
+        funFactRepository.deleteByFromUserUsername(username);
 
         if (banService.isBanned(username)) {
             banService.unbanUser(username);
