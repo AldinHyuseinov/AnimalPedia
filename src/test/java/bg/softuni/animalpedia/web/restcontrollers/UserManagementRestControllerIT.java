@@ -21,7 +21,7 @@ class UserManagementRestControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String API_URL = "/api/admin/";
+    private static final String API_URL = "/api/user-management/";
 
     // users for the tests are from data.sql
     @Test
@@ -39,6 +39,22 @@ class UserManagementRestControllerIT {
                 .andExpect(jsonPath("$._embedded.userDTOList[0].banned", is(false)))
                 .andExpect(jsonPath("$._embedded.userDTOList[0]._links.promote.href", is("http://localhost" + API_URL + "promote/usercheto")))
                 .andExpect(jsonPath("$._embedded.userDTOList[0]._links.demote.href", is("http://localhost" + API_URL + "demote/usercheto")));
+    }
+
+    @Test
+    void testGettingASingleUser() throws Exception {
+
+        mockMvc.perform(get(API_URL + "usercheto")).andExpect(status().isOk())
+                .andExpect(jsonPath("$.imageUrl", is(nullValue())))
+                .andExpect(jsonPath("$.username", is("usercheto")))
+                .andExpect(jsonPath("$.firstName", is("User")))
+                .andExpect(jsonPath("$.lastName", is("Userov")))
+                .andExpect(jsonPath("$.email", is("User@example.com")))
+                .andExpect(jsonPath("$.role", is("USER")))
+                .andExpect(jsonPath("$.userLinks", is(nullValue())))
+                .andExpect(jsonPath("$.banned", is(false)))
+                .andExpect(jsonPath("$._links.promote.href", is("http://localhost" + API_URL + "promote/usercheto")))
+                .andExpect(jsonPath("$._links.demote.href", is("http://localhost" + API_URL + "demote/usercheto")));
     }
 
     @Test

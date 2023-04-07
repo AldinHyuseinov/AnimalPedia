@@ -55,7 +55,7 @@ public class UserManagementRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize("@userService.compareUserRoles(#bannedUserDTO.userUsername)")
     @PostMapping("/ban")
     public ResponseEntity<?> banUser(@RequestBody BannedUserDTO bannedUserDTO) {
 
@@ -67,7 +67,7 @@ public class UserManagementRestController {
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MODERATOR')")
+    @PreAuthorize("@userService.compareUserRoles(#username)")
     @DeleteMapping("/unban/{username}")
     public ResponseEntity<?> unbanUser(@PathVariable String username) {
         banService.unbanUser(username);

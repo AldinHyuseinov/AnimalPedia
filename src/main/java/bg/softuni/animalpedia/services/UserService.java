@@ -120,23 +120,50 @@ public class UserService {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
 
+        AnimalDetailsDTO animal = animalService.animalByName(specieName);
+        User user = userRepository.findByUsername(animal.getAddedByUsername()).get();
+
         if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
             return false;
         }
+        return isAuthorized(user.getUsername(), authentication) || authentication.getName().equals(animal.getAddedByUsername());
+    }
+
+    public boolean compareUserRoles(String otherUserUsername) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return false;
+        }
+        return isAuthorized(otherUserUsername, authentication);
+    }
+
+    private boolean isAuthorized(String otherUserUsername, Authentication authentication) {
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             return true;
         }
 
-        AnimalDetailsDTO animal = animalService.animalByName(specieName);
-        User user = userRepository.findByUsername(animal.getAddedByUsername()).get();
+        User user = userRepository.findByUsername(otherUserUsername).get();
 
         if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_MODERATOR")) &&
                 !user.getRole().getRole().name().equals("ADMIN") &&
                 !user.getRole().getRole().name().equals("MODERATOR")) {
             return true;
         }
-        return authentication.getName().equals(animal.getAddedByUsername());
+        return false;
+    }
+
+    public boolean namesNotEqual(String username) {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
+
+        if (authentication == null || authentication instanceof AnonymousAuthenticationToken) {
+            return true;
+        }
+
+        return !authentication.getName().equals(username);
     }
 
     public void deleteUser(String username) {

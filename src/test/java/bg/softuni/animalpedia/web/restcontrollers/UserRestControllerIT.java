@@ -3,9 +3,15 @@ package bg.softuni.animalpedia.web.restcontrollers;
 import bg.softuni.animalpedia.models.dto.EditUserDTO;
 import bg.softuni.animalpedia.models.dto.RegisterUserDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
+import jakarta.mail.internet.MimeMessage;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -13,8 +19,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.aMapWithSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,6 +28,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserRestControllerIT {
     @Autowired
     private MockMvc mockMvc;
+
+    @Value("${mail.host}")
+    private String mailHost;
+
+    @Value("${mail.port}")
+    private Integer mailPort;
+    @Value("${mail.username}")
+    private String mailUsername;
+    @Value("${mail.password}")
+    private String mailPassword;
 
     private ObjectMapper mapper;
 
@@ -48,6 +63,10 @@ class UserRestControllerIT {
         registerUserDTO.setFirstName(FIRST_NAME);
         registerUserDTO.setLastName(LAST_NAME);
         registerUserDTO.setEmail(EMAIL);
+
+        GreenMail greenMail = new GreenMail(new ServerSetup(mailPort, mailHost, "smtp"));
+        greenMail.start();
+        greenMail.setUser(mailUsername, mailPassword);
 
         mockMvc.perform(post("/api/users/register").contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
@@ -76,6 +95,10 @@ class UserRestControllerIT {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(registerUserDTO))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", aMapWithSize(3)));
+
+        MimeMessage[] receivedMessages = greenMail.getReceivedMessages();
+        Assertions.assertEquals(1, receivedMessages.length);
+        greenMail.stop();
     }
 
     @Test
@@ -100,5 +123,12 @@ class UserRestControllerIT {
                         .accept(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(editUserDTO))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$", aMapWithSize(2)));
+    }
+
+    @Test
+    //users from data.sql file
+    @WithUserDetails("usercheto")
+    void testDeletingUser() throws Exception {
+        mockMvc.perform(delete("/api/users/delete").contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
     }
 }

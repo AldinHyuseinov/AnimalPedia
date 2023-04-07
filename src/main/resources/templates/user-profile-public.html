@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{fragments/head}"></head>
 
@@ -35,9 +34,8 @@
                     <span th:text="${user.email}"></span>
                     <div class="px-4 mt-5"></div>
 
-                    <th:block sec:authorize="hasAnyRole('ADMIN', 'MODERATOR')">
-                        <th:block th:unless="${user.banned or #strings.equals(user.role, 'ADMIN') or #strings.equals(user.role, 'MODERATOR')}">
-                            <input type="hidden" th:value="${user.role}">
+                    <th:block th:if="${@userService.compareUserRoles(user.username)}">
+                        <th:block th:unless="${user.banned}">
                             <button id="ban-link" th:value="${user.username}" type="button" class="btn btn-danger"
                                     data-bs-toggle="modal" data-bs-target="#exampleModal"
                                     th:data-bs-whatever="${user.username}">

@@ -71,6 +71,9 @@ public class AnimalService {
     public AnimalOfTheDayDTO randomAnimal() {
         List<Animal> animals = animalRepository.findAll();
 
+        if (animals.isEmpty()) {
+            return null;
+        }
         Random random = new Random();
         int index = random.nextInt(animals.size());
 

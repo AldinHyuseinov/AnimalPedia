@@ -31,10 +31,12 @@ public class AnimalOfTheDayTask {
     public void animalOfTheDay() {
         animalOfTheDay = animalService.randomAnimal();
 
-        Optional<Picture> picture = pictureService.animalPictureByName(animalOfTheDay.getSpecieName());
-        picture.ifPresent(value -> animalOfTheDay.setUrl(value.getUrl()));
+        if (animalOfTheDay != null) {
+            Optional<Picture> picture = pictureService.animalPictureByName(animalOfTheDay.getSpecieName());
+            picture.ifPresent(value -> animalOfTheDay.setUrl(value.getUrl()));
 
-        LOGGER.info("Animal of the day is: {}", animalOfTheDay.getSpecieName());
+            LOGGER.info("Animal of the day is: {}", animalOfTheDay.getSpecieName());
+        }
     }
 
     // Expose the selected animal through a method
