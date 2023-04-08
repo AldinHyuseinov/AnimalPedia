@@ -2,6 +2,8 @@ const form = document.getElementById('register-form');
 
 form.addEventListener('submit', function (event) {
     event.preventDefault();
+    const registerButton = document.getElementById('register-button');
+    registerButton.disabled = true;
 
     const username = document.getElementById('username').value.trim();
     const firstName = document.getElementById('firstName').value.trim();
@@ -31,6 +33,7 @@ form.addEventListener('submit', function (event) {
         .then(response => {
 
             if (response.status === 400) {
+                registerButton.disabled = false
                 manageResponse(response, data)
             } else {
                 window.location.href = 'http://localhost:8000/?success=You+Successfully+Signed+Up!';

@@ -51,7 +51,12 @@ public class BanService {
     }
 
     public String getBanTime(String username) {
-        return bannedUserRepository.findByUserUsername(username).get().getBannedUntil().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+        LocalDateTime bannedUntil = bannedUserRepository.findByUserUsername(username).get().getBannedUntil();
+
+        if (bannedUntil == null) {
+            return "Permanent";
+        }
+        return bannedUntil.format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
 
     @Scheduled(fixedRate = 7200000) // Runs every 2 hours
