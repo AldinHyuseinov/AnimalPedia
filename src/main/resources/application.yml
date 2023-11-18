@@ -30,7 +30,7 @@ server:
   port: 8000
 
 mail:
-  host: localhost
+  host: mailhog
   port: 1025
   username: "test@example.com"
   password: ""
