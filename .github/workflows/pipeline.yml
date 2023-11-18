@@ -21,15 +21,6 @@ jobs:
           cache: maven
       - name: Build and Test with Maven
         run: mvn -B package --file pom.xml
-
-  docker-compose:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
       - name: Run docker-compose file
         uses: isbang/compose-action@v1.5.1
         with:
