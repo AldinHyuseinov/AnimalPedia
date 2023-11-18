@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  mysql:
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+      - MYSQL_DATABASE=animal_encyclopedia
+    image: mysql:latest
+    volumes:
+      - mysqldb:/var/lib/mysql
+
+  web-app:
+    build:
+      dockerfile: ./Dockerfile
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    container_name: web-app
+    environment:
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: com.mysql.cj.jdbc.Driver
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/animal_encyclopedia?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: pass
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - "8025:8025"
+    container_name: mailhog
+
+volumes:
+  mysqldb:
