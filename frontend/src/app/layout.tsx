@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Merriweather } from "next/font/google";
 import "./css/globals.css";
+import Navigation from "./components/Navigation";
 
 const merriweather = Merriweather({
   weight: ["300", "700", "900"],
@@ -19,7 +20,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${merriweather.className}`}>{children}</body>
+      <body className={`${merriweather.className}`}>
+        <Navigation />
+        {children}
+      </body>
     </html>
   );
 }
