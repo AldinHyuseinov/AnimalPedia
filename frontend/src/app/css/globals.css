@@ -6,6 +6,9 @@
   --spacing-primary: 1rem;
   --spacing-secondary: 1.5rem;
   --spacing-tertiary: 2rem;
+
+  --basic-shadow: 0 0 1em rgba(44, 44, 44, 0.25);
+  --rounding: 4px;
 }
 
 html,
@@ -32,6 +35,10 @@ a {
 img {
   display: block;
   max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--clr-accent);
 }
 
 /* Typography */

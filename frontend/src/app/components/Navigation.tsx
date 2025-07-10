@@ -24,9 +24,37 @@ export default function Navigation() {
           <Link href="/animals/all">Animals</Link>
         </li>
         <li>
-          <Link href="#" role="button">
-            Animal List
-          </Link>
+          <div className="list-dropdown-toggle" role="button">
+            <span>Animals List</span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="14"
+              fill="#2C2C2C"
+              viewBox="0 0 24 24"
+            >
+              <path d="M17.35 8H6.65c-.64 0-.99.76-.56 1.24l5.35 6.11c.3.34.83.34 1.13 0l5.35-6.11C18.34 8.76 18 8 17.36 8Z"></path>
+            </svg>
+
+            <ul className="animals-list">
+              <li>
+                <Link href="/animals/mammals">Mammals</Link>
+              </li>
+              <li>
+                <Link href="/animals/birds">Birds</Link>
+              </li>
+              <li>
+                <Link href="/animals/reptiles">Reptiles</Link>
+              </li>
+              <li>
+                <Link href="/animals/amphibians">Amphibians</Link>
+              </li>
+              <li>
+                <Link href="/animals/fish">Fish</Link>
+              </li>
+            </ul>
+          </div>
         </li>
         <li>
           <Link href="/register">Register</Link>
@@ -39,7 +67,7 @@ export default function Navigation() {
         </li>
         <li>
           <form>
-            <input type="search" placeholder="Search" aria-label="Search" />
+            <input type="search" placeholder="Search" aria-label="Search" name="search" />
             <svg
               className="search-icon"
               role="button"

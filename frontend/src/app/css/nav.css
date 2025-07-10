@@ -3,45 +3,107 @@
   top: 0;
   display: flex;
   justify-content: space-between;
-  margin: var(--spacing-primary);
+  margin: var(--spacing-primary) var(--spacing-primary) 0 var(--spacing-primary);
   height: 2.7em;
+
+  .logo {
+    display: flex;
+    align-items: center;
+
+    svg {
+      fill: var(--clr-accent);
+    }
+
+    .brand-name {
+      font-weight: 300;
+
+      span {
+        color: var(--clr-accent);
+      }
+    }
+  }
 }
 
 .nav-links {
+  --transition: 0.3s ease-in-out;
   display: flex;
   gap: var(--spacing-secondary);
   align-items: center;
+
+  li {
+    transition: color var(--transition);
+
+    a:not(:has(input[type="search"])),
+    .list-dropdown-toggle {
+      color: var(--clr-secondary);
+      padding: 0.25em 0.75em;
+      border-radius: var(--rounding);
+      transition: background var(--transition), color var(--transition);
+
+      &:hover {
+        background: var(--clr-accent);
+        color: var(--clr-primary);
+
+        svg {
+          fill: var(--clr-primary);
+        }
+      }
+    }
+
+    input[type="search"] {
+      position: relative;
+      border: none;
+      outline: 1px solid var(--clr-secondary);
+      border-radius: var(--rounding);
+      background-color: var(--clr-primary);
+      color: var(--clr-secondary);
+      padding: 0.2em;
+      transition: outline-color var(--transition);
+
+      &:focus {
+        outline-color: var(--clr-accent);
+      }
+    }
+
+    &:focus-within .search-icon {
+      fill: var(--clr-accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      right: 10px;
+      top: 14px;
+      cursor: pointer;
+      transition: fill var(--transition);
+    }
+  }
 }
 
-.logo {
+.list-dropdown-toggle {
+  position: relative;
   display: flex;
   align-items: center;
-}
-
-.logo svg {
-  fill: var(--clr-accent);
-}
-
-.brand-name {
-  font-weight: 300;
-}
-
-.brand-name span {
-  color: var(--clr-accent);
-}
-
-input[type="search"] {
-  position: relative;
-  border: 1px solid var(--clr-secondary);
-  border-radius: 4px;
-  background-color: var(--clr-primary);
-  color: var(--clr-secondary);
-  padding: 0.2em;
-}
-
-.search-icon {
-  position: absolute;
-  right: 10px;
-  top: 14px;
+  justify-content: center;
+  gap: 0.1em;
   cursor: pointer;
+
+  svg {
+    transition: fill var(--transition);
+  }
+
+  .animals-list {
+    position: absolute;
+    top: 105%;
+    display: none;
+  }
+
+  &:hover .animals-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-primary);
+    border-radius: var(--rounding);
+    box-shadow: var(--basic-shadow);
+    padding: 1em;
+  }
 }
